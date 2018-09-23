@@ -13,6 +13,7 @@ unsigned int newPlayerPositionY = playerPositionY;
 unsigned int health = 0;
 
 char playerChar = 'P';
+bool invActive = false;
 
 
 char map[LEVELHEIGHT][LEVELWIDTH + 1] =
@@ -28,13 +29,17 @@ char map[LEVELHEIGHT][LEVELWIDTH + 1] =
 "aaaaaaaaaaaaaaaaaaaa"
 };
 
-void gotoScreenPosition(short C, short R)
+void clearScene();
+void invInput();
+void renderInventory();
+
+void gotoXY(short C, short R)
 {
 	COORD xy;
 	xy.X = C;
 	xy.Y = R;
 	SetConsoleCursorPosition(
-		GetStdHandle(STD_OUTPUT_HANDLE), xy);
+	GetStdHandle(STD_OUTPUT_HANDLE), xy);
 }
 
 void handleCollisions()
@@ -62,10 +67,14 @@ void handleCollisions()
 
 void renderMap()
 {
+	clearScene();
 	for (int i = 0; i<LEVELHEIGHT; i++)
 	{
 		std::cout << map[i] << std::endl;
 	}
+
+	gotoXY(0, 18);
+	std::cout << "Press I to go to the Inventory" << std::endl;
 }
 
 void handleInput()
@@ -77,31 +86,42 @@ void handleInput()
 	{
 		newPlayerPositionY = playerPositionY - 1;
 	}
-
 	if (GetKeyState(VK_DOWN) & 0x8000)
 	{
 		newPlayerPositionY = playerPositionY + 1;
 	}
-
 	if (GetKeyState(VK_RIGHT) & 0x8000)
 	{
 		newPlayerPositionX = playerPositionX + 1;
 	}
-
 	if (GetKeyState(VK_LEFT) & 0x8000)
 	{
 		newPlayerPositionX = playerPositionX - 1;
+	}
+	if (GetAsyncKeyState('I') & 0x8000) //open inventory
+	{
+		renderInventory();
+		invActive = true;
+	}
+}
+
+void invInput()
+{
+	if (GetAsyncKeyState('G') & 0x8000) //open Game
+	{
+		renderMap();
+		invActive = false;
 	}
 }
 
 void renderPlayer()
 {
 	// Blank old enemy position
-	gotoScreenPosition(playerPositionX, playerPositionY);
+	gotoXY(playerPositionX, playerPositionY);
 	std::cout << ' ';
 
 	// Draw new enemy position
-	gotoScreenPosition(newPlayerPositionX, newPlayerPositionY);
+	gotoXY(newPlayerPositionX, newPlayerPositionY);
 	std::cout << playerChar;
 
 	playerPositionX = newPlayerPositionX;
@@ -112,8 +132,35 @@ void renderPlayer()
 
 void renderGUI()
 {
-	gotoScreenPosition(2, LEVELHEIGHT + 3);
+	gotoXY(2, LEVELHEIGHT + 3);
 	std::cout << "Health: " << health;
+}
+
+void clearScene() // Blanks out the screen
+{
+	gotoXY(0, 0);
+
+	for (int i = 0; i < 40; i++)
+	{
+		for (int j = 0; j < 100; j++)
+		{
+			std::cout << ' ';
+		}
+		std::cout << std::endl;
+	}
+	gotoXY(0, 0);
+}
+
+void renderInventory()
+{
+	clearScene();
+	std::cout << "Inventory:" << std::endl;
+	std::cout << "--------------------" << std::endl;
+
+	std::cout << "--------------------" << std::endl;
+
+	gotoXY(0, 18);
+	std::cout << "Press G to go back to game" << std::endl;
 }
 
 void main()
@@ -122,23 +169,28 @@ void main()
 	RECT r;
 	GetWindowRect(console, &r);
 
-	MoveWindow(console, r.left, r.top, 800, 800, TRUE);
-
 	renderMap();
 
 	while (true)
 	{
-		// Handles the input and updates the players position
-		handleInput();
+		if (invActive == false)
+		{
+			// Render the scene
+			renderPlayer();
 
-		// Handle collisions
-		handleCollisions();
+			// Render the GUI
+			renderGUI();
 
-		// Render the scene
-		renderPlayer();
+			// Handles the input and updates the players position
+			handleInput();
 
-		// Render the GUI
-		renderGUI();
+			// Handle collisions
+			handleCollisions();
+		}
+		if (invActive == true)
+		{
+			invInput();
+		}
 	}
 
 	system("pause");
