@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include "Item.h"
 
 const int LEVELWIDTH = 20;
 const int LEVELHEIGHT = 10;
@@ -15,17 +16,20 @@ unsigned int health = 0;
 
 char playerChar = 'P';
 bool invActive = false;
-std::vector<std::string> inventory;
+std::vector<Item> inventory;
+Item* sword = new Item('s',"Sword");
+Item* armour = new Item('d', "Armour");
+Item* potion = new Item('o', "Potion");
 
 char map[LEVELHEIGHT][LEVELWIDTH + 1] =
 { "aaaaaaaaaaaaaaaaaaaa",
 "a         +        a",
-"a  w               a",
+"a  s               a",
 "a                  a",
 "a                  a",
 "a  o            +  a",
 "a                  a",
-"a     +         x  a",
+"a     +         d  a",
 "a          +       a",
 "aaaaaaaaaaaaaaaaaaaa"
 };
@@ -64,23 +68,23 @@ void handleCollisions()
 		// Remove it from the map
 		map[newPlayerPositionY][newPlayerPositionX] = ' ';
 	}
-	if (nextLocation == 'w')
+	if (nextLocation == sword->getItemSymbol())
 	{
-		inventory.push_back("weapon");
+		inventory.push_back(*sword); //adds weapon into the inventory
 
 		// Remove it from the map
 		map[newPlayerPositionY][newPlayerPositionX] = ' ';
 	}
-	if (nextLocation == 'x')
+	if (nextLocation == armour->getItemSymbol())
 	{
-		inventory.push_back("armour");
+		inventory.push_back(*armour); //adds armour into the inventory
 
 		// Remove it from the map
 		map[newPlayerPositionY][newPlayerPositionX] = ' ';
 	}
-	if (nextLocation == 'o')
+	if (nextLocation == potion->getItemSymbol())
 	{
-		inventory.push_back("potion");
+		inventory.push_back(*potion); //adds potion into the inventory
 
 		// Remove it from the map
 		map[newPlayerPositionY][newPlayerPositionX] = ' ';
@@ -89,13 +93,13 @@ void handleCollisions()
 
 void renderMap()
 {
-	clearScene();
-	for (int i = 0; i<LEVELHEIGHT; i++)
+	clearScene(); //blanks out the screen
+	for (int i = 0; i<LEVELHEIGHT; i++)  //prints out the map
 	{
 		std::cout << map[i] << std::endl;
 	}
 
-	gotoXY(0, 18);
+	gotoXY(0, 18);	//prints the below text at this location
 	std::cout << "Press I to go to the Inventory" << std::endl;
 }
 
@@ -120,32 +124,37 @@ void handleInput()
 	{
 		newPlayerPositionX = playerPositionX - 1;
 	}
-	if (GetAsyncKeyState('I') & 0x8000) //open inventory
+	if (GetAsyncKeyState('I') & 0x8000) //prints out inventory when I is pressed
 	{
-		renderInventory();
+		renderInventory(); 
 		invActive = true;
 	}
 }
 
 void invInput()
 {
-	char input;
-	std::cin >> input;
-	if (input == 'g' || input == 'G') //open Game
+	while(true)
 	{
-		renderMap();
-		invActive = false;
-	}
-	if (input == 'd' || input == 'D')
-	{
-		int x;
-		gotoXY(0, 20);
-		std::cout << "select the number you want to delete:" << std::endl;
-		std::cin >> x;
-		if (x >= 0 && x <= inventory.size())
+		char input;
+		std::cin >> input;
+		if (input == 'g' || input == 'G') //open Game
 		{
-			inventory.erase(inventory.begin() + x);
-			renderInventory();
+			renderMap();	
+			invActive = false;
+			break;
+		}
+		if (input == 'd' || input == 'D' && inventory.size() >= 0)
+		{
+			int x;
+			gotoXY(0, 20);
+			std::cout << "select the number you want to delete:" << std::endl;
+			std::cin >> x;
+			if (x >= 0 && x <= inventory.size())
+			{
+				map[newPlayerPositionY][newPlayerPositionX - 1] = inventory[x].getItemSymbol();
+				inventory.erase(inventory.begin() + x);
+				renderInventory();
+			}
 		}
 	}
 }
@@ -192,9 +201,9 @@ void renderInventory()
 	clearScene();
 	std::cout << "Inventory:" << std::endl;
 	std::cout << "--------------------" << std::endl;
-	for (int i = 0; i < inventory.size(); i++)
+	for (int i = 0; i < inventory.size(); i++)		//prints out the inventory items
 	{
-		std::cout << i << ": " << inventory[i] << std::endl;
+		std::cout << i << ": " << inventory[i].getItemName() << std::endl;
 	}
 	std::cout << "--------------------" << std::endl;
 
@@ -230,7 +239,7 @@ void main()
 		}
 		if (invActive == true)
 		{
-			invInput();
+			invInput(); //inventory controls
 		}
 	}
 
