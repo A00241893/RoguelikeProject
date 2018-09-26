@@ -37,6 +37,7 @@ char map[LEVELHEIGHT][LEVELWIDTH + 1] =
 void clearScene();
 void invInput();
 void renderInventory();
+void dropItem(char drop);
 
 void gotoXY(short C, short R)
 {
@@ -151,11 +152,35 @@ void invInput()
 			std::cin >> x;
 			if (x >= 0 && x <= inventory.size())
 			{
-				map[newPlayerPositionY][newPlayerPositionX - 1] = inventory[x].getItemSymbol();
+				dropItem(inventory[x].getItemSymbol());
 				inventory.erase(inventory.begin() + x);
 				renderInventory();
 			}
 		}
+	}
+}
+
+void dropItem(char drop)
+{
+	if (map[newPlayerPositionY][newPlayerPositionX - 1] == ' ')
+	{
+		map[newPlayerPositionY][newPlayerPositionX - 1] = drop;
+	}
+	else if (map[newPlayerPositionY][newPlayerPositionX + 1] == ' ')
+	{
+		map[newPlayerPositionY][newPlayerPositionX + 1] = drop;
+	}
+	else if (map[newPlayerPositionY + 1][newPlayerPositionX] == ' ')
+	{
+		map[newPlayerPositionY + 1][newPlayerPositionX] = drop;
+	}
+	else if (map[newPlayerPositionY - 1][newPlayerPositionX] == ' ')
+	{
+		map[newPlayerPositionY - 1][newPlayerPositionX] = drop;
+	}
+	else
+	{
+		std::cout << "There is no space blyat" << std::endl;
 	}
 }
 
