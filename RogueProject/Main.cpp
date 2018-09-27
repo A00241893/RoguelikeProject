@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <conio.h>
 #include "Item.h"
 
 const int LEVELWIDTH = 20;
@@ -71,7 +72,7 @@ void handleCollisions()
 	}
 	if (nextLocation == sword->getItemSymbol())
 	{
-		inventory.push_back(*sword); //adds weapon into the inventory
+		inventory.push_back(*sword); //adds sword into the inventory
 
 		// Remove it from the map
 		map[newPlayerPositionY][newPlayerPositionX] = ' ';
@@ -134,34 +135,39 @@ void handleInput()
 
 void invInput()
 {
-	while(true)
-	{
-		char input;
+	char input = _getch();
+	while (true) {
+		gotoXY(0, 18);
+		std::cout << "Press 'G' to go back to game or 'D' to delete an item" << std::endl;
 		std::cin >> input;
-		if (input == 'g' || input == 'G') //open Game
+		if (input == 'g' || input == 'G')
 		{
-			renderMap();	
-			invActive = false;
+			renderMap();	//prints out the map
+			invActive = false;	//disables inventory controls
 			break;
 		}
 		if (input == 'd' || input == 'D' && inventory.size() >= 0)
 		{
 			int x;
-			gotoXY(0, 20);
-			std::cout << "select the number you want to delete:" << std::endl;
+			gotoXY(0, 18);
+			std::cout << "select the number you want to delete:                       " << std::endl;
 			std::cin >> x;
 			if (x >= 0 && x <= inventory.size())
 			{
-				dropItem(inventory[x].getItemSymbol());
-				inventory.erase(inventory.begin() + x);
+				dropItem(inventory[x].getItemSymbol()); //prints symbol back in the map
+				inventory.erase(inventory.begin() + x);	//removes item from inventory
 				renderInventory();
 			}
+			else {}
 		}
 	}
 }
 
 void dropItem(char drop)
 {
+	/**checks if the spaces around the player is empty. 
+	if it is empty it prints the item to be dropped symbol in that space
+	**/
 	if (map[newPlayerPositionY][newPlayerPositionX - 1] == ' ')
 	{
 		map[newPlayerPositionY][newPlayerPositionX - 1] = drop;
@@ -180,7 +186,7 @@ void dropItem(char drop)
 	}
 	else
 	{
-		std::cout << "There is no space blyat" << std::endl;
+		std::cout << "There is no space to drop items" << std::endl;
 	}
 }
 
@@ -208,8 +214,10 @@ void renderGUI()
 
 void clearScene() // Blanks out the screen
 {
-	gotoXY(0, 0);
+	gotoXY(0, 0); // goes to first position in the scene
 
+	/** prints out 40 x 100 blank spaces 
+	**/
 	for (int i = 0; i < 40; i++)
 	{
 		for (int j = 0; j < 100; j++)
@@ -226,16 +234,11 @@ void renderInventory()
 	clearScene();
 	std::cout << "Inventory:" << std::endl;
 	std::cout << "--------------------" << std::endl;
-	for (int i = 0; i < inventory.size(); i++)		//prints out the inventory items
+	for (int i = 0; i < inventory.size(); i++)		//prints out the vector of inventory items
 	{
 		std::cout << i << ": " << inventory[i].getItemName() << std::endl;
 	}
 	std::cout << "--------------------" << std::endl;
-
-	gotoXY(0, 18);
-	std::cout << "Press G to go back to game" << std::endl;
-	gotoXY(0, 19);
-	std::cout << "Press D to delete an item" << std::endl;
 }
 
 void main()
