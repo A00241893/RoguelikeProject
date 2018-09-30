@@ -107,6 +107,7 @@ void renderMap()
 
 void handleInput()
 {
+	char input = _getch();
 	newPlayerPositionX = playerPositionX;
 	newPlayerPositionY = playerPositionY;
 
@@ -126,7 +127,7 @@ void handleInput()
 	{
 		newPlayerPositionX = playerPositionX - 1;
 	}
-	if (GetAsyncKeyState('I') & 0x8000) //prints out inventory when I is pressed
+	if (input == 'i' || input == 'I') //prints out inventory when I is pressed
 	{
 		renderInventory(); 
 		invActive = true;
