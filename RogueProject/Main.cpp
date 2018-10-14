@@ -4,6 +4,7 @@
 #include <vector>
 #include <conio.h>
 #include "Item.h"
+#include "Player.h"
 
 const int LEVELWIDTH = 20;
 const int LEVELHEIGHT = 10;
@@ -17,6 +18,7 @@ unsigned int health = 0;
 
 char playerChar = 'P';
 bool invActive = false;
+
 std::vector<Item> inventory;
 Item* sword = new Item('s',"Sword");
 Item* armour = new Item('d', "Armour");
@@ -70,21 +72,21 @@ void handleCollisions()
 		// Remove it from the map
 		map[newPlayerPositionY][newPlayerPositionX] = ' ';
 	}
-	if (nextLocation == sword->getItemSymbol())
+	if (nextLocation == sword->getItemSymbol()) //if the player collides with the sword.
 	{
-		inventory.push_back(*sword); //adds sword into the inventory
+		inventory.push_back(*sword); //adds to the inventory
 
 		// Remove it from the map
 		map[newPlayerPositionY][newPlayerPositionX] = ' ';
 	}
-	if (nextLocation == armour->getItemSymbol())
+	if (nextLocation == armour->getItemSymbol()) //if the player collides with the armour
 	{
 		inventory.push_back(*armour); //adds armour into the inventory
 
 		// Remove it from the map
 		map[newPlayerPositionY][newPlayerPositionX] = ' ';
 	}
-	if (nextLocation == potion->getItemSymbol())
+	if (nextLocation == potion->getItemSymbol()) // if the player collides with the potion
 	{
 		inventory.push_back(*potion); //adds potion into the inventory
 
@@ -191,18 +193,19 @@ void dropItem(char drop)
 	}
 }
 
-void renderPlayer()
+void renderPlayer(Player& p)
 {
 	// Blank old enemy position
-	gotoXY(playerPositionX, playerPositionY);
+	gotoXY(p.getPositionX, p.getPositionY);
 	std::cout << ' ';
 
 	// Draw new enemy position
-	gotoXY(newPlayerPositionX, newPlayerPositionY);
-	std::cout << playerChar;
+	gotoXY(p.getNewPositionX, p.getNewPositionY);
+	std::cout << p.getSymbol;
 
-	playerPositionX = newPlayerPositionX;
-	playerPositionY = newPlayerPositionY;
+	p.setNewPositionX(p.getPositionX);
+	p.setNewPositionY(p.getPositionY);
+
 
 	Sleep(60);
 }
@@ -248,6 +251,7 @@ void main()
 	RECT r;
 	GetWindowRect(console, &r);
 
+	Player* p = new Player(5,5,5,5,100,'P');
 	renderMap();
 
 	while (true)
@@ -255,7 +259,7 @@ void main()
 		if (invActive == false)
 		{
 			// Render the scene
-			renderPlayer();
+			renderPlayer(*p);
 
 			// Render the GUI
 			renderGUI();
