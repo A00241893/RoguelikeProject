@@ -15,3 +15,12 @@ private:
 	char symbol;
 	std::string name;
 };
+
+
+
+class Utils
+{
+public:
+	static void gotoXY(short C, short R);
+
+};

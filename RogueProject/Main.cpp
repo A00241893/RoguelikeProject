@@ -9,14 +9,14 @@
 const int LEVELWIDTH = 20;
 const int LEVELHEIGHT = 10;
 
-unsigned int playerPositionX = 5;
-unsigned int playerPositionY = 5;
-unsigned int newPlayerPositionX = playerPositionX;
-unsigned int newPlayerPositionY = playerPositionY;
+//unsigned int playerPositionX = 5;
+//unsigned int playerPositionY = 5;
+//unsigned int newPlayerPositionX = playerPositionX;
+//unsigned int newPlayerPositionY = playerPositionY;
 
-unsigned int health = 0;
+//unsigned int health = 0;
 
-char playerChar = 'P';
+//char playerChar = 'P';
 bool invActive = false;
 
 std::vector<Item> inventory;
@@ -38,9 +38,9 @@ char map[LEVELHEIGHT][LEVELWIDTH + 1] =
 };
 
 void clearScene();
-void invInput();
+void invInput(Player& p);
 void renderInventory();
-void dropItem(char drop);
+void dropItem(char drop, char& map, Player& p);
 
 void gotoXY(short C, short R)
 {
@@ -51,47 +51,56 @@ void gotoXY(short C, short R)
 	GetStdHandle(STD_OUTPUT_HANDLE), xy);
 }
 
-void handleCollisions()
+
+//Utils::gotoXY(10, 10);
+
+void handleCollisions(Player& p)
 {
 	// Check the location that the player wants to move to on the map
-	char nextLocation = map[newPlayerPositionY][newPlayerPositionX];
+	char nextLocation = map[p.getNewPositionY()][p.getNewPositionX()];
 
 	// If the nextLocation is a border....
 	if (nextLocation == 'a')
 	{
 		// ....then don't move i.e. set the new position back to the old position
-		newPlayerPositionX = playerPositionX;
-		newPlayerPositionY = playerPositionY;
+		p.setNewPositionX(p.getPositionX());
+		p.setNewPositionY(p.getPositionY());
+	}
+	if (nextLocation == ' ')
+	{
+		p.setPositionX(p.getNewPositionX());
+		p.setPositionY(p.getNewPositionY());
+		
 	}
 	// If the nextLocation is a health pack
 	if (nextLocation == '+')
 	{
 		// Increase our health
-		health++;
+		p.setHealth(p.getHealth() + 1);
 
 		// Remove it from the map
-		map[newPlayerPositionY][newPlayerPositionX] = ' ';
+		map[p.getNewPositionY()][p.getNewPositionX()] = ' ';
 	}
 	if (nextLocation == sword->getItemSymbol()) //if the player collides with the sword.
 	{
 		inventory.push_back(*sword); //adds to the inventory
 
 		// Remove it from the map
-		map[newPlayerPositionY][newPlayerPositionX] = ' ';
+		map[p.getNewPositionY()][p.getNewPositionX()] = ' ';
 	}
 	if (nextLocation == armour->getItemSymbol()) //if the player collides with the armour
 	{
 		inventory.push_back(*armour); //adds armour into the inventory
 
 		// Remove it from the map
-		map[newPlayerPositionY][newPlayerPositionX] = ' ';
+		map[p.getNewPositionY()][p.getNewPositionX()] = ' ';
 	}
 	if (nextLocation == potion->getItemSymbol()) // if the player collides with the potion
 	{
 		inventory.push_back(*potion); //adds potion into the inventory
 
 		// Remove it from the map
-		map[newPlayerPositionY][newPlayerPositionX] = ' ';
+		map[p.getNewPositionY()][p.getNewPositionX()] = ' ';
 	}
 }
 
@@ -107,27 +116,31 @@ void renderMap()
 	std::cout << "Press I to go to the Inventory" << std::endl;
 }
 
-void handleInput()
+void handleInput(Player& p)
 {
 	char input = _getch();
-	newPlayerPositionX = playerPositionX;
-	newPlayerPositionY = playerPositionY;
+	p.setNewPositionX(p.getPositionX());
+	p.setNewPositionY(p.getPositionY());
 
 	if (GetKeyState(VK_UP) & 0x8000)
 	{
-		newPlayerPositionY = playerPositionY - 1;
+		p.setNewPositionY(p.getPositionY() - 1);
+		//newPlayerPositionY = playerPositionY - 1;
 	}
 	if (GetKeyState(VK_DOWN) & 0x8000)
 	{
-		newPlayerPositionY = playerPositionY + 1;
+		p.setNewPositionY(p.getPositionY() + 1);
+		//newPlayerPositionY = playerPositionY + 1;
 	}
 	if (GetKeyState(VK_RIGHT) & 0x8000)
 	{
-		newPlayerPositionX = playerPositionX + 1;
+		p.setNewPositionX(p.getPositionX() + 1);
+		//newPlayerPositionX = playerPositionX + 1;
 	}
 	if (GetKeyState(VK_LEFT) & 0x8000)
 	{
-		newPlayerPositionX = playerPositionX - 1;
+		p.setNewPositionX(p.getPositionX() - 1);
+		//newPlayerPositionX = playerPositionX - 1;
 	}
 	if (input == 'i' || input == 'I') //prints out inventory when I is pressed
 	{
@@ -136,7 +149,7 @@ void handleInput()
 	}
 }
 
-void invInput()
+void invInput(Player& p)
 {
 	char input = _getch();
 	while (true) {
@@ -157,7 +170,8 @@ void invInput()
 			std::cin >> x;
 			if (x >= 0 && x <= inventory.size())
 			{
-				dropItem(inventory[x].getItemSymbol()); //prints symbol back in the map
+				p.dropItem(inventory[x].getItemSymbol(), &map, p);
+				//dropItem(inventory[x].getItemSymbol(), p); //prints symbol back in the map
 				inventory.erase(inventory.begin() + x);	//removes item from inventory
 				renderInventory();
 			}
@@ -166,54 +180,26 @@ void invInput()
 	}
 }
 
-void dropItem(char drop)
-{
-	/**checks if the spaces around the player is empty. 
-	if it is empty it prints the item to be dropped symbol in that space
-	**/
-	if (map[newPlayerPositionY][newPlayerPositionX - 1] == ' ')
-	{
-		map[newPlayerPositionY][newPlayerPositionX - 1] = drop;
-	}
-	else if (map[newPlayerPositionY][newPlayerPositionX + 1] == ' ')
-	{
-		map[newPlayerPositionY][newPlayerPositionX + 1] = drop;
-	}
-	else if (map[newPlayerPositionY + 1][newPlayerPositionX] == ' ')
-	{
-		map[newPlayerPositionY + 1][newPlayerPositionX] = drop;
-	}
-	else if (map[newPlayerPositionY - 1][newPlayerPositionX] == ' ')
-	{
-		map[newPlayerPositionY - 1][newPlayerPositionX] = drop;
-	}
-	else
-	{
-		std::cout << "There is no space to drop items" << std::endl;
-	}
-}
-
 void renderPlayer(Player& p)
 {
 	// Blank old enemy position
-	gotoXY(p.getPositionX, p.getPositionY);
+	gotoXY(p.getPositionX(), p.getPositionY());
 	std::cout << ' ';
 
 	// Draw new enemy position
-	gotoXY(p.getNewPositionX, p.getNewPositionY);
-	std::cout << p.getSymbol;
+	gotoXY(p.getNewPositionX(), p.getNewPositionY());
+	std::cout << p.getSymbol();
 
-	p.setNewPositionX(p.getPositionX);
-	p.setNewPositionY(p.getPositionY);
-
+	p.setNewPositionX(p.getPositionX());
+	p.setNewPositionY(p.getPositionY());
 
 	Sleep(60);
 }
 
-void renderGUI()
+void renderGUI(Player& p)
 {
 	gotoXY(2, LEVELHEIGHT + 3);
-	std::cout << "Health: " << health;
+	std::cout << "Health: " << p.getHealth();
 }
 
 void clearScene() // Blanks out the screen
@@ -262,17 +248,17 @@ void main()
 			renderPlayer(*p);
 
 			// Render the GUI
-			renderGUI();
+			renderGUI(*p);
 
 			// Handles the input and updates the players position
-			handleInput();
+			handleInput(*p);
 
 			// Handle collisions
-			handleCollisions();
+			handleCollisions(*p);
 		}
 		if (invActive == true)
 		{
-			invInput(); //inventory controls
+			invInput(*p); //inventory controls
 		}
 	}
 
