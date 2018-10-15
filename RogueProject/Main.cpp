@@ -5,24 +5,12 @@
 #include <conio.h>
 #include "Item.h"
 #include "Player.h"
+#include "Utils.h"
 
 const int LEVELWIDTH = 20;
 const int LEVELHEIGHT = 10;
 
-//unsigned int playerPositionX = 5;
-//unsigned int playerPositionY = 5;
-//unsigned int newPlayerPositionX = playerPositionX;
-//unsigned int newPlayerPositionY = playerPositionY;
-
-//unsigned int health = 0;
-
-//char playerChar = 'P';
 bool invActive = false;
-
-std::vector<Item> inventory;
-Item* sword = new Item('s',"Sword");
-Item* armour = new Item('d', "Armour");
-Item* potion = new Item('o', "Potion");
 
 char map[LEVELHEIGHT][LEVELWIDTH + 1] =
 { "aaaaaaaaaaaaaaaaaaaa",
@@ -37,22 +25,15 @@ char map[LEVELHEIGHT][LEVELWIDTH + 1] =
 "aaaaaaaaaaaaaaaaaaaa"
 };
 
-void clearScene();
-void invInput(Player& p);
+std::vector<Item> inventory;
+Item* sword = new Item('s',"Sword");
+Item* armour = new Item('d', "Armour");
+Item* potion = new Item('o', "Potion");
+
+
+void invInput(Player& p, char* map[]);
 void renderInventory();
-void dropItem(char drop, char& map, Player& p);
 
-void gotoXY(short C, short R)
-{
-	COORD xy;
-	xy.X = C;
-	xy.Y = R;
-	SetConsoleCursorPosition(
-	GetStdHandle(STD_OUTPUT_HANDLE), xy);
-}
-
-
-//Utils::gotoXY(10, 10);
 
 void handleCollisions(Player& p)
 {
@@ -106,13 +87,14 @@ void handleCollisions(Player& p)
 
 void renderMap()
 {
-	clearScene(); //blanks out the screen
+	Utils::clearScene(); //blanks out the screen
 	for (int i = 0; i<LEVELHEIGHT; i++)  //prints out the map
 	{
 		std::cout << map[i] << std::endl;
 	}
 
-	gotoXY(0, 18);	//prints the below text at this location
+	Utils::gotoXY(0,18);
+	//gotoXY(0, 18);	//prints the below text at this location
 	std::cout << "Press I to go to the Inventory" << std::endl;
 }
 
@@ -149,11 +131,12 @@ void handleInput(Player& p)
 	}
 }
 
-void invInput(Player& p)
+void invInput(Player& p, char* map[])
 {
 	char input = _getch();
 	while (true) {
-		gotoXY(0, 18);
+
+		Utils::gotoXY(0, 18);
 		std::cout << "Press 'G' to go back to game or 'D' to delete an item" << std::endl;
 		std::cin >> input;
 		if (input == 'g' || input == 'G')
@@ -165,13 +148,12 @@ void invInput(Player& p)
 		if (input == 'd' || input == 'D' && inventory.size() >= 0)
 		{
 			int x;
-			gotoXY(0, 18);
+			Utils::gotoXY(0, 18);
 			std::cout << "select the number you want to delete:                       " << std::endl;
 			std::cin >> x;
 			if (x >= 0 && x <= inventory.size())
 			{
-				p.dropItem(inventory[x].getItemSymbol(), &map, p);
-				//dropItem(inventory[x].getItemSymbol(), p); //prints symbol back in the map
+				p.dropItem(inventory[x].getItemSymbol(), map, p);
 				inventory.erase(inventory.begin() + x);	//removes item from inventory
 				renderInventory();
 			}
@@ -180,48 +162,15 @@ void invInput(Player& p)
 	}
 }
 
-void renderPlayer(Player& p)
-{
-	// Blank old enemy position
-	gotoXY(p.getPositionX(), p.getPositionY());
-	std::cout << ' ';
-
-	// Draw new enemy position
-	gotoXY(p.getNewPositionX(), p.getNewPositionY());
-	std::cout << p.getSymbol();
-
-	p.setNewPositionX(p.getPositionX());
-	p.setNewPositionY(p.getPositionY());
-
-	Sleep(60);
-}
-
 void renderGUI(Player& p)
 {
-	gotoXY(2, LEVELHEIGHT + 3);
+	Utils::gotoXY(2, LEVELHEIGHT + 3);
 	std::cout << "Health: " << p.getHealth();
-}
-
-void clearScene() // Blanks out the screen
-{
-	gotoXY(0, 0); // goes to first position in the scene
-
-	/** prints out 40 x 100 blank spaces 
-	**/
-	for (int i = 0; i < 40; i++)
-	{
-		for (int j = 0; j < 100; j++)
-		{
-			std::cout << ' ';
-		}
-		std::cout << std::endl;
-	}
-	gotoXY(0, 0);
 }
 
 void renderInventory()
 {
-	clearScene();
+	Utils::clearScene();
 	std::cout << "Inventory:" << std::endl;
 	std::cout << "--------------------" << std::endl;
 	for (int i = 0; i < inventory.size(); i++)		//prints out the vector of inventory items
@@ -237,6 +186,9 @@ void main()
 	RECT r;
 	GetWindowRect(console, &r);
 
+	char* m[LEVELHEIGHT];
+	*m = map[0];
+
 	Player* p = new Player(5,5,5,5,100,'P');
 	renderMap();
 
@@ -245,7 +197,7 @@ void main()
 		if (invActive == false)
 		{
 			// Render the scene
-			renderPlayer(*p);
+			p->renderPlayer(*p);
 
 			// Render the GUI
 			renderGUI(*p);
@@ -258,7 +210,7 @@ void main()
 		}
 		if (invActive == true)
 		{
-			invInput(*p); //inventory controls
+			invInput(*p, m); //inventory controls
 		}
 	}
 

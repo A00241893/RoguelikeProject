@@ -10,7 +10,9 @@ public:
 	int getHealth() const;
 	void setSymbol(char s);
 	char getSymbol() const;
-	void dropItem(char drop,char* map[], Player p);
+
+	void dropItem(char drop, char * map[], Player & p);
+	void renderPlayer(Player & p);
 
 private:
 

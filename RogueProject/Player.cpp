@@ -1,4 +1,5 @@
 #include "Player.h"
+#include "Utils.h"
 #include <iostream>
 
 Player::Player(){}
@@ -28,7 +29,7 @@ char Player::getSymbol() const
 	return symbol;
 }
 
-void dropItem(char drop, char* map[], Player& p)
+void Player::dropItem(char drop, char* map[], Player& p)
 {
 	/**checks if the spaces around the player is empty.
 	if it is empty it prints the item to be dropped symbol in that space
@@ -53,6 +54,22 @@ void dropItem(char drop, char* map[], Player& p)
 	{
 		std::cout << "There is no space to drop items" << std::endl;
 	}
+}
+
+void Player::renderPlayer(Player& p)
+{
+	// Blank old enemy position
+	Utils::gotoXY(p.getPositionX(), p.getPositionY());
+	std::cout << ' ';
+
+	// Draw new enemy position
+	Utils::gotoXY(p.getNewPositionX(), p.getNewPositionY());
+	std::cout << p.getSymbol();
+
+	p.setNewPositionX(p.getPositionX());
+	p.setNewPositionY(p.getPositionY());
+
+	Sleep(60);
 }
 
 
