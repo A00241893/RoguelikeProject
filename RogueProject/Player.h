@@ -1,21 +1,13 @@
 #pragma once
-#include "Position.h"
+#include "Character.h"
 
-class Player : public Position
+class Player : public Character
 {
 public:
 	Player();
-	Player(int xPos, int yPos, int newXPos, int newYPos, int h, char s);
-	void setHealth(int h);
-	int getHealth() const;
-	void setSymbol(char s);
-	char getSymbol() const;
+	Player(Position pos, char s, int h, int d);
 
 	void dropItem(char drop, char * map[], Player & p);
 	void renderPlayer(Player & p);
 
-private:
-
-	int health;
-	char symbol;
 };

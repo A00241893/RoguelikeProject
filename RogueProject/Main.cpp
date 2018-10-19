@@ -85,19 +85,6 @@ void handleCollisions(Player& p)
 	}
 }
 
-void renderMap()
-{
-	Utils::clearScene(); //blanks out the screen
-	for (int i = 0; i<LEVELHEIGHT; i++)  //prints out the map
-	{
-		std::cout << map[i] << std::endl;
-	}
-
-	Utils::gotoXY(0,18);
-	//gotoXY(0, 18);	//prints the below text at this location
-	std::cout << "Press I to go to the Inventory" << std::endl;
-}
-
 void handleInput(Player& p)
 {
 	char input = _getch();
@@ -141,7 +128,7 @@ void invInput(Player& p, char* map[])
 		std::cin >> input;
 		if (input == 'g' || input == 'G')
 		{
-			renderMap();	//prints out the map
+			Utils::renderMap(LEVELHEIGHT, map);	//prints out the map
 			invActive = false;	//disables inventory controls
 			break;
 		}
@@ -160,12 +147,6 @@ void invInput(Player& p, char* map[])
 			else {}
 		}
 	}
-}
-
-void renderGUI(Player& p)
-{
-	Utils::gotoXY(2, LEVELHEIGHT + 3);
-	std::cout << "Health: " << p.getHealth();
 }
 
 void renderInventory()
@@ -189,8 +170,8 @@ void main()
 	char* m[LEVELHEIGHT];
 	*m = map[0];
 
-	Player* p = new Player(5,5,5,5,100,'P');
-	renderMap();
+	Player* p = new Player(Position(5,5,5,5), 'P', 100, 0);
+	Utils::renderMap(LEVELHEIGHT, m);
 
 	while (true)
 	{
@@ -200,7 +181,7 @@ void main()
 			p->renderPlayer(*p);
 
 			// Render the GUI
-			renderGUI(*p);
+			Utils::renderGUI(*p, LEVELHEIGHT);
 
 			// Handles the input and updates the players position
 			handleInput(*p);

@@ -4,30 +4,9 @@
 
 Player::Player(){}
 
-Player::Player(int xPos, int yPos, int newXPos, int newYPos, int h, char s)
-	:Position(xPos, yPos, newXPos, newYPos)
-{
-	health = h;
-	symbol = s;
-}
-
-void Player::setHealth(int h)
-{
-	health = h;
-}
-int Player::getHealth() const
-{
-	return health;
-}
-
-void Player::setSymbol(char s)
-{
-	symbol = s;
-}
-char Player::getSymbol() const
-{
-	return symbol;
-}
+Player::Player(Position pos, char s, int h, int d)
+	:Character(pos, s, h, d)
+{}
 
 void Player::dropItem(char drop, char* map[], Player& p)
 {

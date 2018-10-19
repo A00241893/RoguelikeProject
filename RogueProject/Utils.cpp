@@ -25,3 +25,21 @@ void Utils::clearScene()
 	}
 	Utils::gotoXY(0, 0);
 }
+
+void Utils::renderMap(int lHeight, char* map[])
+{
+	Utils::clearScene(); //blanks out the screen
+	for (int i = 0; i < lHeight; i++)  //prints out the map
+	{
+		std::cout << map[i] << std::endl;
+	}
+
+	Utils::gotoXY(0, 18);
+	std::cout << "Press I to go to the Inventory" << std::endl;
+}
+
+void Utils::renderGUI(Player& p, int lHeight)
+{
+	Utils::gotoXY(2, lHeight + 3);
+	std::cout << "Health: " << p.getHealth();
+}
