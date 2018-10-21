@@ -2,7 +2,7 @@
 
 Character::Character() {}
 
-Character::Character(Position pos, char s, int h, int d)
+Character::Character(Position pos, char s, int h)
 {
 	health = h;
 	symbol = s;
@@ -25,15 +25,6 @@ void Character::setSymbol(char s)
 char Character::getSymbol() const
 {
 	return symbol;
-}
-
-void Character::setDamage(int d)
-{
-	damage = d;
-}
-int Character::getDamage() const
-{
-	return damage;
 }
 
 

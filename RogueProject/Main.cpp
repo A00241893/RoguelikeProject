@@ -12,30 +12,25 @@ const int LEVELHEIGHT = 10;
 
 bool invActive = false;
 
+
 char map[LEVELHEIGHT][LEVELWIDTH + 1] =
 { "aaaaaaaaaaaaaaaaaaaa",
-"a         +        a",
-"a  s               a",
+"a   s     +        a",
 "a                  a",
+"a                d a",
 "a                  a",
-"a  o            +  a",
+"a               +  a",
 "a                  a",
-"a     +         d  a",
+"a     +        o   a",
 "a          +       a",
 "aaaaaaaaaaaaaaaaaaaa"
 };
 
-std::vector<Item> inventory;
-Item* sword = new Item('s',"Sword");
-Item* armour = new Item('d', "Armour");
-Item* potion = new Item('o', "Potion");
+
+void invInput(Player& p, char* map[], std::vector<Item> inventory);
 
 
-void invInput(Player& p, char* map[]);
-void renderInventory();
-
-
-void handleCollisions(Player& p)
+void handleCollisions(Player& p, std::vector<Item> inventory, Item& potion, Item& armour, Item& sword)
 {
 	// Check the location that the player wants to move to on the map
 	char nextLocation = map[p.getNewPositionY()][p.getNewPositionX()];
@@ -62,30 +57,30 @@ void handleCollisions(Player& p)
 		// Remove it from the map
 		map[p.getNewPositionY()][p.getNewPositionX()] = ' ';
 	}
-	if (nextLocation == sword->getItemSymbol()) //if the player collides with the sword.
+	if (nextLocation == sword.getItemSymbol()) //if the player collides with the sword.
 	{
-		inventory.push_back(*sword); //adds to the inventory
+		inventory.push_back(sword); //adds to the inventory
 
 		// Remove it from the map
 		map[p.getNewPositionY()][p.getNewPositionX()] = ' ';
 	}
-	if (nextLocation == armour->getItemSymbol()) //if the player collides with the armour
+	if (nextLocation == armour.getItemSymbol()) //if the player collides with the armour
 	{
-		inventory.push_back(*armour); //adds armour into the inventory
+		inventory.push_back(armour); //adds armour into the inventory
 
 		// Remove it from the map
 		map[p.getNewPositionY()][p.getNewPositionX()] = ' ';
 	}
-	if (nextLocation == potion->getItemSymbol()) // if the player collides with the potion
+	if (nextLocation == potion.getItemSymbol()) // if the player collides with the potion
 	{
-		inventory.push_back(*potion); //adds potion into the inventory
+		inventory.push_back(potion); //adds potion into the inventory
 
 		// Remove it from the map
 		map[p.getNewPositionY()][p.getNewPositionX()] = ' ';
 	}
 }
 
-void handleInput(Player& p)
+void handleInput(Player& p, std::vector<Item> inventory)
 {
 	char input = _getch();
 	p.setNewPositionX(p.getPositionX());
@@ -113,12 +108,12 @@ void handleInput(Player& p)
 	}
 	if (input == 'i' || input == 'I') //prints out inventory when I is pressed
 	{
-		renderInventory(); 
+		p.renderInventory(inventory); 
 		invActive = true;
 	}
 }
 
-void invInput(Player& p, char* map[])
+void invInput(Player& p, char* map[], std::vector<Item> inventory)
 {
 	char input = _getch();
 	while (true) {
@@ -142,35 +137,28 @@ void invInput(Player& p, char* map[])
 			{
 				p.dropItem(inventory[x].getItemSymbol(), map, p);
 				inventory.erase(inventory.begin() + x);	//removes item from inventory
-				renderInventory();
+				p.renderInventory(inventory);
 			}
 			else {}
 		}
 	}
 }
 
-void renderInventory()
-{
-	Utils::clearScene();
-	std::cout << "Inventory:" << std::endl;
-	std::cout << "--------------------" << std::endl;
-	for (int i = 0; i < inventory.size(); i++)		//prints out the vector of inventory items
-	{
-		std::cout << i << ": " << inventory[i].getItemName() << std::endl;
-	}
-	std::cout << "--------------------" << std::endl;
-}
-
-void main()
+int main()
 {
 	HWND console = GetConsoleWindow();
 	RECT r;
 	GetWindowRect(console, &r);
 
+	std::vector<Item> inventory;
+	Item* sword = new Item('s', "Sword");
+	Item* armour = new Item('d', "Armour");
+	Item* potion = new Item('o', "Potion");
+
 	char* m[LEVELHEIGHT];
 	*m = map[0];
 
-	Player* p = new Player(Position(5,5,5,5), 'P', 100, 0);
+	Player* p = new Player(Position(5,5,5,5), 'P', 100);
 	Utils::renderMap(LEVELHEIGHT, m);
 
 	while (true)
@@ -184,16 +172,17 @@ void main()
 			Utils::renderGUI(*p, LEVELHEIGHT);
 
 			// Handles the input and updates the players position
-			handleInput(*p);
+			handleInput(*p, inventory);
 
 			// Handle collisions
-			handleCollisions(*p);
+			handleCollisions(*p, inventory, *potion, *armour, *sword);
 		}
 		if (invActive == true)
 		{
-			invInput(*p, m); //inventory controls
+			invInput(*p, m, inventory); //inventory controls
 		}
 	}
 
 	system("pause");
+	return 0;
 }

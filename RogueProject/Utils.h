@@ -1,4 +1,5 @@
-#pragma once
+#ifndef UTILS_H
+#define UTILS_H
 #include <windows.h>
 #include <iostream>
 #include "Player.h"
@@ -12,3 +13,5 @@ public:
 	static void renderMap(int lHeight, char* map[]);
 	static void renderGUI(Player& p, int lHeight);
 };
+
+#endif // UTILS_H

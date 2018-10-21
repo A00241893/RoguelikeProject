@@ -1,11 +1,11 @@
 #include "Player.h"
 #include "Utils.h"
-#include <iostream>
+
 
 Player::Player(){}
 
-Player::Player(Position pos, char s, int h, int d)
-	:Character(pos, s, h, d)
+Player::Player(Position pos, char s, int h)
+	:Character(pos, s, h)
 {}
 
 void Player::dropItem(char drop, char* map[], Player& p)
@@ -49,6 +49,18 @@ void Player::renderPlayer(Player& p)
 	p.setNewPositionY(p.getPositionY());
 
 	Sleep(60);
+}
+
+void Player::renderInventory(std::vector<Item>& inventory)
+{
+	Utils::clearScene();
+	std::cout << "Inventory:" << std::endl;
+	std::cout << "--------------------" << std::endl;
+	for (int i = 0; i < inventory.size(); i++)		//prints out the vector of inventory items
+	{
+		std::cout << i << ": " << inventory[i].getItemName() << std::endl;
+	}
+	std::cout << "--------------------" << std::endl;
 }
 
 

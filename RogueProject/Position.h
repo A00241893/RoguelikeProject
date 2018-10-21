@@ -1,4 +1,5 @@
-#pragma once
+#ifndef POSITION_H
+#define POSITION_H
 
 class Position
 {
@@ -20,3 +21,5 @@ private:
 	int newXPos;
 	int newYPos;
 };
+
+#endif // POSITION_H

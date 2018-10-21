@@ -1,15 +1,14 @@
-#pragma once
+#ifndef CHARACTER_H
+#define CHARACTER_H
 #include "Position.h"
 
 class Character : public Position
 {
 public:
 	Character();
-	Character(Position pos, char s, int h, int d);
+	Character(Position pos, char s, int h);
 	void setHealth(int h);
 	int getHealth() const;
-	void setDamage(int h);
-	int getDamage() const;
 	void setSymbol(char s);
 	char getSymbol() const;
 
@@ -18,7 +17,8 @@ public:
 private:
 
 	Position pos;
-	int damage;
 	int health;
 	char symbol;
 };
+
+#endif // CHARACTER_H
