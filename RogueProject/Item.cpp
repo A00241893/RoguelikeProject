@@ -3,22 +3,22 @@
 Item::Item()
 {
 	name = " ";
-	symbol = ' ';
+	itemSymbol = ' ';
 }
 
 Item::Item(char s, std::string n)
 {
 	name = n;
-	symbol = s;
+	itemSymbol = s;
 }
 
 void Item::setItemSymbol(int s)
 {
-	symbol = s;
+	itemSymbol = s;
 }
 int Item::getItemSymbol()
 {
-	return symbol;
+	return itemSymbol;
 }
 void Item::setItemName(std::string n)
 {

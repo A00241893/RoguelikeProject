@@ -1,21 +1,19 @@
-#pragma once
-#include "Position.h"
+#ifndef PLAYER_H
+#define PLAYER_H
+#include "Character.h"
+#include "Item.h"
+#include <vector>
 
-class Player : public Position
+class Player : public Character
 {
 public:
 	Player();
-	Player(int xPos, int yPos, int newXPos, int newYPos, int h, char s);
-	void setHealth(int h);
-	int getHealth() const;
-	void setSymbol(char s);
-	char getSymbol() const;
+	Player(Position pos, char s, int h);
 
 	void dropItem(char drop, char * map[], Player & p);
 	void renderPlayer(Player & p);
+	void renderInventory(std::vector<Item>& inv);
 
-private:
-
-	int health;
-	char symbol;
 };
+
+#endif // PLAYER_H
