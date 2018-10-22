@@ -11,7 +11,7 @@ const int LEVELWIDTH = 20;
 const int LEVELHEIGHT = 10;
 
 bool invActive = false;
-
+std::vector<Item> inventory;
 
 char map[LEVELHEIGHT][LEVELWIDTH + 1] =
 { "aaaaaaaaaaaaaaaaaaaa",
@@ -26,11 +26,10 @@ char map[LEVELHEIGHT][LEVELWIDTH + 1] =
 "aaaaaaaaaaaaaaaaaaaa"
 };
 
+void invInput(Player& p, char* map[]);
 
-void invInput(Player& p, char* map[], std::vector<Item> inventory);
 
-
-void handleCollisions(Player& p, std::vector<Item> inventory, Item& potion, Item& armour, Item& sword)
+void handleCollisions(Player& p, Item& potion, Item& armour, Item& sword)
 {
 	// Check the location that the player wants to move to on the map
 	char nextLocation = map[p.getNewPositionY()][p.getNewPositionX()];
@@ -80,7 +79,7 @@ void handleCollisions(Player& p, std::vector<Item> inventory, Item& potion, Item
 	}
 }
 
-void handleInput(Player& p, std::vector<Item> inventory)
+void handleInput(Player& p)
 {
 	char input = _getch();
 	p.setNewPositionX(p.getPositionX());
@@ -113,7 +112,17 @@ void handleInput(Player& p, std::vector<Item> inventory)
 	}
 }
 
-void invInput(Player& p, char* map[], std::vector<Item> inventory)
+void renderMap()
+{
+	Utils::clearScene(); //blanks out the screen
+
+	for (int i = 0; i < LEVELHEIGHT; i++)
+	{
+		std::cout << map[i] << std::endl;
+	}
+}
+
+void invInput(Player& p, char* map[])
 {
 	char input = _getch();
 	while (true) {
@@ -123,7 +132,7 @@ void invInput(Player& p, char* map[], std::vector<Item> inventory)
 		std::cin >> input;
 		if (input == 'g' || input == 'G')
 		{
-			Utils::renderMap(LEVELHEIGHT, map);	//prints out the map
+			renderMap();	//prints out the map
 			invActive = false;	//disables inventory controls
 			break;
 		}
@@ -150,7 +159,6 @@ int main()
 	RECT r;
 	GetWindowRect(console, &r);
 
-	std::vector<Item> inventory;
 	Item* sword = new Item('s', "Sword");
 	Item* armour = new Item('d', "Armour");
 	Item* potion = new Item('o', "Potion");
@@ -158,8 +166,9 @@ int main()
 	char* m[LEVELHEIGHT];
 	*m = map[0];
 
-	Player* p = new Player(Position(5,5,5,5), 'P', 100);
-	Utils::renderMap(LEVELHEIGHT, m);
+	Player* p = new Player(Position(5,5,0,0), 'P', 100);
+
+	renderMap();
 
 	while (true)
 	{
@@ -172,14 +181,14 @@ int main()
 			Utils::renderGUI(*p, LEVELHEIGHT);
 
 			// Handles the input and updates the players position
-			handleInput(*p, inventory);
+			handleInput(*p);
 
 			// Handle collisions
-			handleCollisions(*p, inventory, *potion, *armour, *sword);
+			handleCollisions(*p, *potion, *armour, *sword);
 		}
 		if (invActive == true)
 		{
-			invInput(*p, m, inventory); //inventory controls
+			invInput(*p, m); //inventory controls
 		}
 	}
 

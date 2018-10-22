@@ -37,16 +37,16 @@ void Player::dropItem(char drop, char* map[], Player& p)
 
 void Player::renderPlayer(Player& p)
 {
-	// Blank old enemy position
+	// Blank old player position
 	Utils::gotoXY(p.getPositionX(), p.getPositionY());
 	std::cout << ' ';
 
-	// Draw new enemy position
+	// Draw new player position
 	Utils::gotoXY(p.getNewPositionX(), p.getNewPositionY());
 	std::cout << p.getSymbol();
 
-	p.setNewPositionX(p.getPositionX());
-	p.setNewPositionY(p.getPositionY());
+	p.setPositionX(p.getNewPositionX());
+	p.setPositionY(p.getNewPositionY());
 
 	Sleep(60);
 }
