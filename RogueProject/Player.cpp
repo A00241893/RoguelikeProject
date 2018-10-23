@@ -4,14 +4,14 @@
 
 Player::Player(){}
 
-Player::Player(Position pos, char s, int h)
-	:Character(pos, s, h)
+Player::Player(int x, int y, int newX, int newY, char s, int h)
+	:Character(x, y, newX, newY, s, h)
 {}
 
 void Player::dropItem(char drop, char* map[], Player& p)
 {
 	/**checks if the spaces around the player is empty.
-	if it is empty it prints the item to be dropped symbol in that space
+	if it is empty it prints the item's symbol to be dropped in that space
 	**/
 	if (map[p.getNewPositionY()][p.getNewPositionX() - 1] == ' ')
 	{

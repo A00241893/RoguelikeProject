@@ -6,7 +6,7 @@ class Character : public Position
 {
 public:
 	Character();
-	Character(Position pos, char s, int h);
+	Character(int x, int y, int newX, int newY, char s, int h);
 	void setHealth(int h);
 	int getHealth() const;
 	void setSymbol(char s);

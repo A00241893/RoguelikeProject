@@ -2,11 +2,11 @@
 
 Character::Character() {}
 
-Character::Character(Position pos, char s, int h)
+Character::Character(int x, int y, int newX, int newY, char s, int h)
+	:Position(x, y, newX, newY)
 {
 	health = h;
 	symbol = s;
-	pos = Position(0, 0, 0, 0);
 }
 
 void Character::setHealth(int h)

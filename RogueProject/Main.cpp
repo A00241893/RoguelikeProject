@@ -9,15 +9,14 @@
 
 const int LEVELWIDTH = 20;
 const int LEVELHEIGHT = 10;
-
 bool invActive = false;
 std::vector<Item> inventory;
 
-char map[LEVELHEIGHT][LEVELWIDTH + 1] =
+char map [LEVELHEIGHT][LEVELWIDTH + 1] = 
 { "aaaaaaaaaaaaaaaaaaaa",
-"a   s     +        a",
-"a                  a",
-"a                d a",
+"a         +        a",
+"a              d   a",
+"a      s           a",
 "a                  a",
 "a               +  a",
 "a                  a",
@@ -26,7 +25,8 @@ char map[LEVELHEIGHT][LEVELWIDTH + 1] =
 "aaaaaaaaaaaaaaaaaaaa"
 };
 
-void invInput(Player& p, char* map[]);
+
+void invInput(Player& p, char* m[]);
 
 
 void handleCollisions(Player& p, Item& potion, Item& armour, Item& sword)
@@ -40,12 +40,6 @@ void handleCollisions(Player& p, Item& potion, Item& armour, Item& sword)
 		// ....then don't move i.e. set the new position back to the old position
 		p.setNewPositionX(p.getPositionX());
 		p.setNewPositionY(p.getPositionY());
-	}
-	if (nextLocation == ' ')
-	{
-		p.setPositionX(p.getNewPositionX());
-		p.setPositionY(p.getNewPositionY());
-		
 	}
 	// If the nextLocation is a health pack
 	if (nextLocation == '+')
@@ -112,17 +106,17 @@ void handleInput(Player& p)
 	}
 }
 
-void renderMap()
-{
-	Utils::clearScene(); //blanks out the screen
+//void renderMap()
+//{
+//	Utils::clearScene(); //blanks out the screen
+//
+//	for (int i = 0; i < LEVELHEIGHT; i++)
+//	{
+//		std::cout << map[i] << std::endl;
+//	}
+//}
 
-	for (int i = 0; i < LEVELHEIGHT; i++)
-	{
-		std::cout << map[i] << std::endl;
-	}
-}
-
-void invInput(Player& p, char* map[])
+void invInput(Player& p, char* m[])
 {
 	char input = _getch();
 	while (true) {
@@ -132,7 +126,8 @@ void invInput(Player& p, char* map[])
 		std::cin >> input;
 		if (input == 'g' || input == 'G')
 		{
-			renderMap();	//prints out the map
+			//renderMap();	//prints out the map
+			Utils::renderMap(LEVELHEIGHT, LEVELWIDTH, m);
 			invActive = false;	//disables inventory controls
 			break;
 		}
@@ -144,7 +139,7 @@ void invInput(Player& p, char* map[])
 			std::cin >> x;
 			if (x >= 0 && x <= inventory.size())
 			{
-				p.dropItem(inventory[x].getItemSymbol(), map, p);
+				p.dropItem(inventory[x].getItemSymbol(), (char**)m, p);
 				inventory.erase(inventory.begin() + x);	//removes item from inventory
 				p.renderInventory(inventory);
 			}
@@ -163,12 +158,10 @@ int main()
 	Item* armour = new Item('d', "Armour");
 	Item* potion = new Item('o', "Potion");
 
-	char* m[LEVELHEIGHT];
-	*m = map[0];
+	Player* p = new Player(5,5,5,5, 'P', 100);
 
-	Player* p = new Player(Position(5,5,0,0), 'P', 100);
-
-	renderMap();
+	Utils::renderMap(LEVELHEIGHT,LEVELWIDTH, (char**)map);
+	//renderMap();
 
 	while (true)
 	{
@@ -178,7 +171,7 @@ int main()
 			p->renderPlayer(*p);
 
 			// Render the GUI
-			Utils::renderGUI(*p, LEVELHEIGHT);
+			Utils::renderGUI(*p);
 
 			// Handles the input and updates the players position
 			handleInput(*p);
@@ -188,7 +181,7 @@ int main()
 		}
 		if (invActive == true)
 		{
-			invInput(*p, m); //inventory controls
+			invInput(*p, (char**)map); //inventory controls
 		}
 	}
 

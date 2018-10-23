@@ -8,9 +8,9 @@ class Player : public Character
 {
 public:
 	Player();
-	Player(Position pos, char s, int h);
+	Player(int x, int y, int newX, int newY, char s, int h);
 
-	void dropItem(char drop, char * map[], Player & p);
+	void dropItem(char drop, char* map[], Player & p);
 	void renderPlayer(Player & p);
 	void renderInventory(std::vector<Item>& inv);
 

@@ -28,23 +28,27 @@ void Utils::clearScene()
 	Utils::gotoXY(0, 0);
 }
 
-void Utils::renderMap(int lHeight, char* map[])
+void Utils::renderMap(int lHeight, int lWidth, char* m[])
 {
 	Utils::clearScene(); //blanks out the screen
-						
+	
 	/** prints the map out to the scene
 	**/
 	for (int i = 0; i < lHeight; i++)
 	{
-		std::cout << map[i] << std::endl;
+		for (int j = 0; j < lWidth; j++)
+		{
+			std::cout << m[i][j];
+		}
+		std::cout << std::endl;
 	}
 }
 
-void Utils::renderGUI(Player& p, int lHeight)
+void Utils::renderGUI(Player& p)
 {
 	/** prints the GUI under the map
 	**/
-	Utils::gotoXY(2, lHeight + 3);
+	Utils::gotoXY(2, 13);
 	std::cout << "Health: " << p.getHealth();
 
 	Utils::gotoXY(0, 18);
