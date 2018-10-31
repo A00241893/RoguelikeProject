@@ -6,33 +6,19 @@
 #include "Item.h"
 #include "Player.h"
 #include "Utils.h"
+#include "Map.h"
 
 const int LEVELWIDTH = 20;
 const int LEVELHEIGHT = 10;
 bool invActive = false;
 std::vector<Item> inventory;
 
-char map [LEVELHEIGHT][LEVELWIDTH + 1] = 
-{ "aaaaaaaaaaaaaaaaaaaa",
-"a         +        a",
-"a              d   a",
-"a      s           a",
-"a                  a",
-"a               +  a",
-"a                  a",
-"a     +        o   a",
-"a          +       a",
-"aaaaaaaaaaaaaaaaaaaa"
-};
+void invInput(Player& p, Map& gameMap);
 
-
-void invInput(Player& p, char* m[]);
-
-
-void handleCollisions(Player& p, Item& potion, Item& armour, Item& sword)
+void handleCollisions(Player& p, Item& potion, Item& armour, Item& sword, Map& gameMap)
 {
 	// Check the location that the player wants to move to on the map
-	char nextLocation = map[p.getNewPositionY()][p.getNewPositionX()];
+	char nextLocation = gameMap.getXY(p.getNewPositionY(), p.getNewPositionX());
 
 	// If the nextLocation is a border....
 	if (nextLocation == 'a')
@@ -48,28 +34,28 @@ void handleCollisions(Player& p, Item& potion, Item& armour, Item& sword)
 		p.setHealth(p.getHealth() + 1);
 
 		// Remove it from the map
-		map[p.getNewPositionY()][p.getNewPositionX()] = ' ';
+		gameMap.setXY(p.getNewPositionY(), p.getNewPositionX(), ' ');
 	}
 	if (nextLocation == sword.getItemSymbol()) //if the player collides with the sword.
 	{
 		inventory.push_back(sword); //adds to the inventory
 
 		// Remove it from the map
-		map[p.getNewPositionY()][p.getNewPositionX()] = ' ';
+		gameMap.setXY(p.getNewPositionY(), p.getNewPositionX(), ' ');
 	}
 	if (nextLocation == armour.getItemSymbol()) //if the player collides with the armour
 	{
 		inventory.push_back(armour); //adds armour into the inventory
 
 		// Remove it from the map
-		map[p.getNewPositionY()][p.getNewPositionX()] = ' ';
+		gameMap.setXY(p.getNewPositionY(), p.getNewPositionX(), ' ');
 	}
 	if (nextLocation == potion.getItemSymbol()) // if the player collides with the potion
 	{
 		inventory.push_back(potion); //adds potion into the inventory
 
 		// Remove it from the map
-		map[p.getNewPositionY()][p.getNewPositionX()] = ' ';
+		gameMap.setXY(p.getNewPositionY(), p.getNewPositionX(), ' ');
 	}
 }
 
@@ -106,17 +92,7 @@ void handleInput(Player& p)
 	}
 }
 
-//void renderMap()
-//{
-//	Utils::clearScene(); //blanks out the screen
-//
-//	for (int i = 0; i < LEVELHEIGHT; i++)
-//	{
-//		std::cout << map[i] << std::endl;
-//	}
-//}
-
-void invInput(Player& p, char* m[])
+void invInput(Player& p, Map& gameMap)
 {
 	char input = _getch();
 	while (true) {
@@ -126,21 +102,24 @@ void invInput(Player& p, char* m[])
 		std::cin >> input;
 		if (input == 'g' || input == 'G')
 		{
-			//renderMap();	//prints out the map
-			Utils::renderMap(LEVELHEIGHT, LEVELWIDTH, m);
+			Utils::clearScene();
+			gameMap.printMap();
+
 			invActive = false;	//disables inventory controls
 			break;
 		}
 		if (input == 'd' || input == 'D' && inventory.size() >= 0)
 		{
-			int x;
+			int input;
 			Utils::gotoXY(0, 18);
 			std::cout << "select the number you want to delete:                       " << std::endl;
-			std::cin >> x;
-			if (x >= 0 && x <= inventory.size())
+			std::cin >> input;
+			if (input >= 0 && input <= inventory.size())
 			{
-				p.dropItem(inventory[x].getItemSymbol(), (char**)m, p);
-				inventory.erase(inventory.begin() + x);	//removes item from inventory
+				//prints item back onto map
+				p.dropItem(inventory[input].getItemSymbol(), gameMap, p);
+				//removes item from inventory
+				inventory.erase(inventory.begin() + input);
 				p.renderInventory(inventory);
 			}
 			else {}
@@ -154,14 +133,28 @@ int main()
 	RECT r;
 	GetWindowRect(console, &r);
 
+	char map[LEVELHEIGHT][LEVELWIDTH + 1] =
+	{ "aaaaaaaaaaaaaaaaaaaa",
+		"a         +        a",
+		"a              d   a",
+		"a      s           a",
+		"a                  a",
+		"a               +  a",
+		"a                  a",
+		"a     +        o   a",
+		"a          +       a",
+		"aaaaaaaaaaaaaaaaaaaa"
+	};
+
+	Map* gameMap = new Map(&map[0][0], LEVELWIDTH+1, LEVELHEIGHT);
+	gameMap->initMap(&map[0][0], LEVELWIDTH+1, LEVELHEIGHT);
+	gameMap->printMap();
+
 	Item* sword = new Item('s', "Sword");
 	Item* armour = new Item('d', "Armour");
 	Item* potion = new Item('o', "Potion");
 
 	Player* p = new Player(5,5,5,5, 'P', 100);
-
-	Utils::renderMap(LEVELHEIGHT,LEVELWIDTH, (char**)map);
-	//renderMap();
 
 	while (true)
 	{
@@ -177,11 +170,11 @@ int main()
 			handleInput(*p);
 
 			// Handle collisions
-			handleCollisions(*p, *potion, *armour, *sword);
+			handleCollisions(*p, *potion, *armour, *sword, *gameMap);
 		}
 		if (invActive == true)
 		{
-			invInput(*p, (char**)map); //inventory controls
+			invInput(*p, *gameMap); //inventory controls
 		}
 	}
 

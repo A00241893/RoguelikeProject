@@ -28,22 +28,6 @@ void Utils::clearScene()
 	Utils::gotoXY(0, 0);
 }
 
-void Utils::renderMap(int lHeight, int lWidth, char* m[])
-{
-	Utils::clearScene(); //blanks out the screen
-	
-	/** prints the map out to the scene
-	**/
-	for (int i = 0; i < lHeight; i++)
-	{
-		for (int j = 0; j < lWidth; j++)
-		{
-			std::cout << m[i][j];
-		}
-		std::cout << std::endl;
-	}
-}
-
 void Utils::renderGUI(Player& p)
 {
 	/** prints the GUI under the map

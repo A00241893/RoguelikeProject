@@ -8,26 +8,26 @@ Player::Player(int x, int y, int newX, int newY, char s, int h)
 	:Character(x, y, newX, newY, s, h)
 {}
 
-void Player::dropItem(char drop, char* map[], Player& p)
+void Player::dropItem(char drop, Map gameMap, Player& p)
 {
 	/**checks if the spaces around the player is empty.
 	if it is empty it prints the item's symbol to be dropped in that space
 	**/
-	if (map[p.getNewPositionY()][p.getNewPositionX() - 1] == ' ')
+	if (gameMap.getXY(p.getNewPositionY(), p.getNewPositionX() - 1) == ' ')
 	{
-		map[p.getNewPositionY()][p.getNewPositionX() - 1] = drop;
+		gameMap.setXY(p.getNewPositionY(), p.getNewPositionX() - 1, drop);
 	}
-	else if (map[p.getNewPositionY()][p.getNewPositionX() + 1] == ' ')
+	else if (gameMap.getXY(p.getNewPositionY(), p.getNewPositionX() + 1) == ' ')
 	{
-		map[p.getNewPositionY()][p.getNewPositionX() + 1] = drop;
+		gameMap.setXY(p.getNewPositionY(), p.getNewPositionX() + 1, drop);
 	}
-	else if (map[p.getNewPositionY() + 1][p.getNewPositionX()] == ' ')
+	else if (gameMap.getXY(p.getNewPositionY() + 1, p.getNewPositionX()) == ' ')
 	{
-		map[p.getNewPositionY() + 1][p.getNewPositionX()] = drop;
+		gameMap.setXY(p.getNewPositionY() + 1, p.getNewPositionX(), drop);
 	}
-	else if (map[p.getNewPositionY() - 1][p.getNewPositionX()] == ' ')
+	else if (gameMap.getXY(p.getNewPositionY() - 1, p.getNewPositionX()) == ' ')
 	{
-		map[p.getNewPositionY() - 1][p.getNewPositionX()] = drop;
+		gameMap.setXY(p.getNewPositionY() - 1, p.getNewPositionX(), drop);
 	}
 	else
 	{

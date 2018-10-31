@@ -118,6 +118,7 @@
     <ClCompile Include="Character.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Map.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Position.cpp" />
     <ClCompile Include="Utils.cpp" />
@@ -126,6 +127,7 @@
   <ItemGroup>
     <ClInclude Include="Character.h" />
     <ClInclude Include="Item.h" />
+    <ClInclude Include="Map.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Position.h" />
     <ClInclude Include="Utils.h" />
