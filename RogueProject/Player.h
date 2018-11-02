@@ -1,9 +1,6 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 #include "Character.h"
-#include "Weapon.h"
-#include "Armour.h"
-#include "Potion.h"
 #include "Map.h"
 #include <vector>
 
@@ -20,7 +17,6 @@ public:
 
 	bool dropItem(char drop, Map gameMap, Player & p);
 	void renderPlayer(Player & p);
-	void handleCollisions(Player& p, Potion& health, Weapon& sword, Weapon& mace, Armour& leather, Armour& iron, Map& gameMap, std::vector<Item>& inv);
 
 private:
 	int armour;

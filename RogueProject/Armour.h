@@ -9,7 +9,7 @@ public:
 	Armour(char symbol, std::string name, int armour);
 	void setArmour(int a);
 	int getArmour() const;
-	//void useArmour(Player& p, int amount);
+	void useArmour(Player& p, int amount);
 
 private:
 	int armour;

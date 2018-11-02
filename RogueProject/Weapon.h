@@ -10,7 +10,7 @@ public:
 	Weapon(char s, std::string n, int d);
 	void setDamage(int d);
 	int getDamage() const;
-	//void useWeapon(Player& p, int amount);
+	void useWeapon(Player& p, int amount);
 
 private:
 	int damage;

@@ -20,7 +20,7 @@ int Armour::getArmour() const
 	return armour;
 }
 
-//void Armour::useArmour(Player& p, int amount)
-//{
-//	p.setArmour(amount);
-//}
+void Armour::useArmour(Player& p, int amount)
+{
+	p.setArmour(amount);
+}

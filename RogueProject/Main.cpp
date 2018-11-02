@@ -3,11 +3,10 @@
 #include <string>
 #include <vector>
 #include <conio.h>
-#include "Item.h"
+#include "Position.h"
 #include "Weapon.h"
 #include "Armour.h"
 #include "Potion.h"
-#include "Player.h"
 #include "Utils.h"
 #include "Map.h"
 
@@ -117,18 +116,12 @@ int main()
 	gameMap->initMap(&map[0][0], LEVELWIDTH+1, LEVELHEIGHT);
 	gameMap->printMap();
 
-	Potion* health = new Potion('h', "Health");
-	Weapon* sword = new Weapon('s', "Sword", 5);
-	Weapon* mace = new Weapon('m', "Mace", 10);
-	Armour* leather = new Armour('l', "Leather", 5);
-	Armour* iron = new Armour('i', "Iron", 10);
-
-	//Item *itemPtr[5];
-	//itemPtr[0] = new Potion('h', "health");
-	//itemPtr[1] = new Weapon('s', "sword", 5);
-	//itemPtr[2] = new Weapon('m', "mace", 10);
-	//itemPtr[3] = new Armour('l', "leather", 5);
-	//itemPtr[4] = new Armour('i', "iron", 10);
+	Item *itemPtr[5];
+	itemPtr[0] = new Potion('h', "Health");
+	itemPtr[1] = new Weapon('s', "Sword", 5);
+	itemPtr[2] = new Weapon('m', "Mace", 10);
+	itemPtr[3] = new Armour('l', "Leather", 5);
+	itemPtr[4] = new Armour('i', "Iron", 10);
 
 	Player* p = new Player(5,5,5,5, 'P', 50, 0, 0);
 
@@ -146,7 +139,7 @@ int main()
 			handleInput(*p);
 
 			// Handle collisions
-			p->handleCollisions(*p, *health, *sword, *mace, *leather, *iron, *gameMap, inventory);
+			Utils::handleCollisions(*p, itemPtr, *gameMap, inventory);
 		}
 		if (invActive == true)
 		{

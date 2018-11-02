@@ -20,7 +20,7 @@ int Weapon::getDamage() const
 	return damage;
 }
 
-//void Weapon::useWeapon(Player& p, int amount)
-//{
-//	p.setDamage(amount);
-//}
+void Weapon::useWeapon(Player& p, int amount)
+{
+	p.setDamage(amount);
+}
