@@ -1,18 +1,19 @@
-#ifndef WEAPONS_H
-#define WEAPONS_H
+#ifndef WEAPON_H
+#define WEAPON_H
 #include <string>
 #include "Item.h"
 
-class Weapon : Item
+class Weapon : public Item
 {
 public:
 	Weapon();
-	Weapon(char symbol, std::string name, int damage);
-	void setDamage(int h);
+	Weapon(char s, std::string n, int d);
+	void setDamage(int d);
 	int getDamage() const;
+	//void useWeapon(Player& p, int amount);
 
 private:
 	int damage;
 };
 
-#endif // WEAPONS_H
+#endif // WEAPON_H

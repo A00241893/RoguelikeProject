@@ -1,7 +1,9 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 #include "Character.h"
-#include "Item.h"
+#include "Weapon.h"
+#include "Armour.h"
+#include "Potion.h"
 #include "Map.h"
 #include <vector>
 
@@ -9,11 +11,20 @@ class Player : public Character
 {
 public:
 	Player();
-	Player(int x, int y, int newX, int newY, char s, int h);
+	Player(int x, int y, int newX, int newY, char sym, int health, int arm, int dam);
 
-	void dropItem(char drop, Map gameMap, Player & p);
+	void setDamage(int h);
+	int getDamage() const;
+	void setArmour(int a);
+	int getArmour() const;
+
+	bool dropItem(char drop, Map gameMap, Player & p);
 	void renderPlayer(Player & p);
-	void renderInventory(std::vector<Item>& inv);
+	void handleCollisions(Player& p, Potion& health, Weapon& sword, Weapon& mace, Armour& leather, Armour& iron, Map& gameMap, std::vector<Item>& inv);
+
+private:
+	int armour;
+	int damage;
 
 };
 

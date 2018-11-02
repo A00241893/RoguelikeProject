@@ -12,11 +12,11 @@ Item::Item(char s, std::string n)
 	itemSymbol = s;
 }
 
-void Item::setItemSymbol(int s)
+void Item::setItemSymbol(char s)
 {
 	itemSymbol = s;
 }
-int Item::getItemSymbol()
+char Item::getItemSymbol()
 {
 	return itemSymbol;
 }
@@ -24,7 +24,7 @@ void Item::setItemName(std::string n)
 {
 	name = n;
 }
-std::string Item::getItemName()
+std::string Item::getItemName() const
 {
 	return name;
 }

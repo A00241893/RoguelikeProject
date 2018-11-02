@@ -32,9 +32,25 @@ void Utils::renderGUI(Player& p)
 {
 	/** prints the GUI under the map
 	**/
-	Utils::gotoXY(2, 13);
+	Utils::gotoXY(2, 12);
 	std::cout << "Health: " << p.getHealth();
+	Utils::gotoXY(2, 13);
+	std::cout << "Armour: " << p.getArmour();
+	Utils::gotoXY(2, 14);
+	std::cout << "Damage: " << p.getDamage();
 
 	Utils::gotoXY(0, 18);
 	std::cout << "Press I to go to the Inventory" << std::endl;
+}
+
+void Utils::printInventory(std::vector<Item>& inv)
+{
+	Utils::clearScene();
+	std::cout << "Inventory:" << std::endl;
+	std::cout << "--------------------" << std::endl;
+	for (int i = 0; i < inv.size(); i++)		//prints out the vector of inventory items
+	{
+		std::cout << i << ": " << inv[i].getItemName() << std::endl;
+	}
+	std::cout << "--------------------" << std::endl;
 }

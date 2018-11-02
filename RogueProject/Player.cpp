@@ -4,11 +4,31 @@
 
 Player::Player(){}
 
-Player::Player(int x, int y, int newX, int newY, char s, int h)
+Player::Player(int x, int y, int newX, int newY, char s, int h, int arm, int dam)
 	:Character(x, y, newX, newY, s, h)
-{}
+{
+	armour = arm;
+	damage = dam;
+}
 
-void Player::dropItem(char drop, Map gameMap, Player& p)
+void Player::setDamage(int d)
+{
+	damage = d;
+}
+int Player::getDamage() const
+{
+	return damage;
+}
+void Player::setArmour(int a)
+{
+	armour = a;
+}
+int Player::getArmour() const
+{
+	return armour;
+}
+
+bool Player::dropItem(char drop, Map gameMap, Player& p)
 {
 	/**checks if the spaces around the player is empty.
 	if it is empty it prints the item's symbol to be dropped in that space
@@ -16,22 +36,26 @@ void Player::dropItem(char drop, Map gameMap, Player& p)
 	if (gameMap.getXY(p.getNewPositionY(), p.getNewPositionX() - 1) == ' ')
 	{
 		gameMap.setXY(p.getNewPositionY(), p.getNewPositionX() - 1, drop);
+		return true;
 	}
 	else if (gameMap.getXY(p.getNewPositionY(), p.getNewPositionX() + 1) == ' ')
 	{
 		gameMap.setXY(p.getNewPositionY(), p.getNewPositionX() + 1, drop);
+		return true;
 	}
 	else if (gameMap.getXY(p.getNewPositionY() + 1, p.getNewPositionX()) == ' ')
 	{
 		gameMap.setXY(p.getNewPositionY() + 1, p.getNewPositionX(), drop);
+		return true;
 	}
 	else if (gameMap.getXY(p.getNewPositionY() - 1, p.getNewPositionX()) == ' ')
 	{
 		gameMap.setXY(p.getNewPositionY() - 1, p.getNewPositionX(), drop);
+		return true;
 	}
 	else
 	{
-		std::cout << "There is no space to drop items" << std::endl;
+		return false;
 	}
 }
 
@@ -51,16 +75,53 @@ void Player::renderPlayer(Player& p)
 	Sleep(60);
 }
 
-void Player::renderInventory(std::vector<Item>& inventory)
+void Player::handleCollisions(Player& p, Potion& health, Weapon& sword, Weapon& mace, Armour& leather, Armour& iron, Map& gameMap, std::vector<Item>& inv)
 {
-	Utils::clearScene();
-	std::cout << "Inventory:" << std::endl;
-	std::cout << "--------------------" << std::endl;
-	for (int i = 0; i < inventory.size(); i++)		//prints out the vector of inventory items
+	// Check the location that the player wants to move to on the map
+	char nextLocation = gameMap.getXY(p.getNewPositionY(), p.getNewPositionX());
+
+	// If the nextLocation is a border....
+	if (nextLocation == 'a')
 	{
-		std::cout << i << ": " << inventory[i].getItemName() << std::endl;
+		// ....then don't move i.e. set the new position back to the old position
+		p.setNewPositionX(p.getPositionX());
+		p.setNewPositionY(p.getPositionY());
 	}
-	std::cout << "--------------------" << std::endl;
+	if (nextLocation == health.getItemSymbol()) //if the player collides with a potion.
+	{
+		inv.push_back(health); //adds potion to the inventory
+
+												// Remove it from the map
+		gameMap.setXY(p.getNewPositionY(), p.getNewPositionX(), ' ');
+	}
+	if (nextLocation == sword.getItemSymbol()) //if the player collides with a sword.
+	{
+		inv.push_back(sword); //adds sword to the inventory
+
+							   // Remove it from the map
+		gameMap.setXY(p.getNewPositionY(), p.getNewPositionX(), ' ');
+	}
+	if (nextLocation == mace.getItemSymbol()) //if the player collides with a mace.
+	{
+		inv.push_back(mace); //adds mace to the inventory
+
+							   // Remove it from the map
+		gameMap.setXY(p.getNewPositionY(), p.getNewPositionX(), ' ');
+	}
+	if (nextLocation == leather.getItemSymbol()) //if the player collides with leather.
+	{
+		inv.push_back(leather); //adds leather to the inventory
+
+							   // Remove it from the map
+		gameMap.setXY(p.getNewPositionY(), p.getNewPositionX(), ' ');
+	}
+	if (nextLocation == iron.getItemSymbol()) //if the player collides with iron.
+	{
+		inv.push_back(iron); //adds iron to the inventory
+
+							   // Remove it from the map
+		gameMap.setXY(p.getNewPositionY(), p.getNewPositionX(), ' ');
+	}
 }
 
 

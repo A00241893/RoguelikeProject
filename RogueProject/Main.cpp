@@ -4,6 +4,9 @@
 #include <vector>
 #include <conio.h>
 #include "Item.h"
+#include "Weapon.h"
+#include "Armour.h"
+#include "Potion.h"
 #include "Player.h"
 #include "Utils.h"
 #include "Map.h"
@@ -13,51 +16,9 @@ const int LEVELHEIGHT = 10;
 bool invActive = false;
 std::vector<Item> inventory;
 
+
+void handleInput(Player & p);
 void invInput(Player& p, Map& gameMap);
-
-void handleCollisions(Player& p, Item& potion, Item& armour, Item& sword, Map& gameMap)
-{
-	// Check the location that the player wants to move to on the map
-	char nextLocation = gameMap.getXY(p.getNewPositionY(), p.getNewPositionX());
-
-	// If the nextLocation is a border....
-	if (nextLocation == 'a')
-	{
-		// ....then don't move i.e. set the new position back to the old position
-		p.setNewPositionX(p.getPositionX());
-		p.setNewPositionY(p.getPositionY());
-	}
-	// If the nextLocation is a health pack
-	if (nextLocation == '+')
-	{
-		// Increase our health
-		p.setHealth(p.getHealth() + 1);
-
-		// Remove it from the map
-		gameMap.setXY(p.getNewPositionY(), p.getNewPositionX(), ' ');
-	}
-	if (nextLocation == sword.getItemSymbol()) //if the player collides with the sword.
-	{
-		inventory.push_back(sword); //adds to the inventory
-
-		// Remove it from the map
-		gameMap.setXY(p.getNewPositionY(), p.getNewPositionX(), ' ');
-	}
-	if (nextLocation == armour.getItemSymbol()) //if the player collides with the armour
-	{
-		inventory.push_back(armour); //adds armour into the inventory
-
-		// Remove it from the map
-		gameMap.setXY(p.getNewPositionY(), p.getNewPositionX(), ' ');
-	}
-	if (nextLocation == potion.getItemSymbol()) // if the player collides with the potion
-	{
-		inventory.push_back(potion); //adds potion into the inventory
-
-		// Remove it from the map
-		gameMap.setXY(p.getNewPositionY(), p.getNewPositionX(), ' ');
-	}
-}
 
 void handleInput(Player& p)
 {
@@ -87,7 +48,7 @@ void handleInput(Player& p)
 	}
 	if (input == 'i' || input == 'I') //prints out inventory when I is pressed
 	{
-		p.renderInventory(inventory); 
+		Utils::printInventory(inventory); 
 		invActive = true;
 	}
 }
@@ -116,11 +77,17 @@ void invInput(Player& p, Map& gameMap)
 			std::cin >> input;
 			if (input >= 0 && input <= inventory.size())
 			{
-				//prints item back onto map
-				p.dropItem(inventory[input].getItemSymbol(), gameMap, p);
-				//removes item from inventory
-				inventory.erase(inventory.begin() + input);
-				p.renderInventory(inventory);
+				//prints first letter of items name back onto map
+				if (p.dropItem(inventory[input].getItemSymbol(), gameMap, p) == true)
+				{
+					//removes item from inventory
+					inventory.erase(inventory.begin() + input);
+					Utils::printInventory(inventory);
+				}
+				else
+				{
+					Utils::printInventory(inventory); 
+				}				
 			}
 			else {}
 		}
@@ -135,14 +102,14 @@ int main()
 
 	char map[LEVELHEIGHT][LEVELWIDTH + 1] =
 	{ "aaaaaaaaaaaaaaaaaaaa",
-		"a         +        a",
-		"a              d   a",
+		"a                  a",
+		"a              h   a",
 		"a      s           a",
+		"a           i      a",
 		"a                  a",
-		"a               +  a",
 		"a                  a",
-		"a     +        o   a",
-		"a          +       a",
+		"a              m   a",
+		"a   l              a",
 		"aaaaaaaaaaaaaaaaaaaa"
 	};
 
@@ -150,11 +117,20 @@ int main()
 	gameMap->initMap(&map[0][0], LEVELWIDTH+1, LEVELHEIGHT);
 	gameMap->printMap();
 
-	Item* sword = new Item('s', "Sword");
-	Item* armour = new Item('d', "Armour");
-	Item* potion = new Item('o', "Potion");
+	Potion* health = new Potion('h', "Health");
+	Weapon* sword = new Weapon('s', "Sword", 5);
+	Weapon* mace = new Weapon('m', "Mace", 10);
+	Armour* leather = new Armour('l', "Leather", 5);
+	Armour* iron = new Armour('i', "Iron", 10);
 
-	Player* p = new Player(5,5,5,5, 'P', 100);
+	//Item *itemPtr[5];
+	//itemPtr[0] = new Potion('h', "health");
+	//itemPtr[1] = new Weapon('s', "sword", 5);
+	//itemPtr[2] = new Weapon('m', "mace", 10);
+	//itemPtr[3] = new Armour('l', "leather", 5);
+	//itemPtr[4] = new Armour('i', "iron", 10);
+
+	Player* p = new Player(5,5,5,5, 'P', 50, 0, 0);
 
 	while (true)
 	{
@@ -170,7 +146,7 @@ int main()
 			handleInput(*p);
 
 			// Handle collisions
-			handleCollisions(*p, *potion, *armour, *sword, *gameMap);
+			p->handleCollisions(*p, *health, *sword, *mace, *leather, *iron, *gameMap, inventory);
 		}
 		if (invActive == true)
 		{
