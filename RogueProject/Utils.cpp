@@ -78,3 +78,5 @@ void Utils::handleCollisions(Player& p, Item* ptr[5], Map& gameMap, std::vector<
 		}
 	}
 }
+
+
