@@ -1,10 +1,11 @@
 #ifndef PLAYER_H
 #define PLAYER_H
-#include "Character.h"
+#include "GameEntity.h"
+#include "Item.h"
 #include "Map.h"
 #include <vector>
 
-class Player : public Character
+class Player : public GameEntity
 {
 public:
 	Player();
@@ -17,6 +18,7 @@ public:
 
 	bool dropItem(char drop, Map gameMap, Player & p);
 	void renderPlayer(Player & p);
+	void handleCollisions(Player& p, Item* ptr[5], Map& gameMap, std::vector<Item>& inv);
 
 private:
 	int armour;

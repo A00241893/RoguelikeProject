@@ -4,7 +4,6 @@
 #include <conio.h>
 #include <iostream>
 #include "Player.h"
-#include "Item.h"
 
 class Utils
 {
@@ -14,7 +13,9 @@ public:
 	static void clearScene();
 	static void renderGUI(Player& p);
 	static void printInventory(std::vector<Item>& inv);
-	static void handleCollisions(Player& p, Item* ptr[5], Map& gameMap, std::vector<Item>& inv);
+	static bool handleInput(Player & p, std::vector<Item>& inv);
+	static bool invInput(Player& p, Map& gameMap, std::vector<Item>& inv);
+	static void printMsg(int x, int y, std::string msg);
 };
 
 #endif // UTILS_H

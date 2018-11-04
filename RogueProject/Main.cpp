@@ -9,7 +9,6 @@
 #include "Potion.h"
 #include "Utils.h"
 #include "Map.h"
-#include "Controls.h"
 
 const int LEVELWIDTH = 20;
 const int LEVELHEIGHT = 10;
@@ -59,17 +58,17 @@ int main()
 			Utils::renderGUI(*p);
 
 			// Handles the input
-			if (Controls::handleInput(*p, inventory) == true)
+			if (Utils::handleInput(*p, inventory) == true)
 			{
 				invActive = true; // activates inventory
 			}
 
 			// Handle collisions
-			Utils::handleCollisions(*p, itemPtr, *gameMap, inventory);
+			p->handleCollisions(*p, itemPtr, *gameMap, inventory);
 		}
 		if (invActive == true)
 		{
-			if (Controls::invInput(*p, *gameMap, inventory) == true) //inventory controls
+			if (Utils::invInput(*p, *gameMap, inventory) == true) //inventory controls
 			{
 				invActive = false; // activates game controls
 			}

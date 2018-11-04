@@ -5,7 +5,7 @@
 Player::Player(){}
 
 Player::Player(int x, int y, int newX, int newY, char s, int h, int arm, int dam)
-	:Character(x, y, newX, newY, s, h)
+	:GameEntity(x, y, newX, newY, s, h)
 {
 	armour = arm;
 	damage = dam;
@@ -75,4 +75,27 @@ void Player::renderPlayer(Player& p)
 	Sleep(60);
 }
 
+void Player::handleCollisions(Player& p, Item* ptr[5], Map& gameMap, std::vector<Item>& inv)
+{
+	// Check the location that the player wants to move to on the map
+	char nextLocation = gameMap.getXY(p.getNewPositionY(), p.getNewPositionX());
+
+	// If the nextLocation is a border....
+	if (nextLocation == 'a')
+	{
+		// ....then don't move i.e. set the new position back to the old position
+		p.setNewPositionX(p.getPositionX());
+		p.setNewPositionY(p.getPositionY());
+	}
+	for (int i = 0; i < 5; i++)
+	{
+		if (nextLocation == ptr[i]->getItemSymbol()) //if the player collides with an item.
+		{
+			inv.push_back(*ptr[i]); //adds item to the inventory
+
+									// Remove it from the map
+			gameMap.setXY(p.getNewPositionY(), p.getNewPositionX(), ' ');
+		}
+	}
+}
 

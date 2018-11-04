@@ -2,7 +2,7 @@
 #define ITEM_H
 
 #include <string>
-#include "Player.h"
+//#include "Player.h"
 
 class Item
 {
@@ -13,6 +13,8 @@ public:
 	char getItemSymbol();
 	void setItemName(std::string n);
 	std::string getItemName() const;
+
+	//virtual void useItem() = 0;
 
 private:
 	char itemSymbol;

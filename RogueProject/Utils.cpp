@@ -39,8 +39,7 @@ void Utils::renderGUI(Player& p)
 	Utils::gotoXY(2, 14);
 	std::cout << "Damage: " << p.getDamage();
 
-	Utils::gotoXY(0, 18);
-	std::cout << "Press I to go to the Inventory" << std::endl;
+	Utils::printMsg(0, 18, "Press I to go to the Inventory");
 }
 
 void Utils::printInventory(std::vector<Item>& inv)
@@ -55,26 +54,81 @@ void Utils::printInventory(std::vector<Item>& inv)
 	std::cout << "--------------------" << std::endl;
 }
 
-void Utils::handleCollisions(Player& p, Item* ptr[5], Map& gameMap, std::vector<Item>& inv)
+void Utils::printMsg(int x, int y, std::string msg)
 {
-	// Check the location that the player wants to move to on the map
-	char nextLocation = gameMap.getXY(p.getNewPositionY(), p.getNewPositionX());
-
-	// If the nextLocation is a border....
-	if (nextLocation == 'a')
+	Utils::gotoXY(x, y); //goes to where message should be printed.
+	for (int j = 0; j < 100; j++) //clears previous message
 	{
-		// ....then don't move i.e. set the new position back to the old position
-		p.setNewPositionX(p.getPositionX());
-		p.setNewPositionY(p.getPositionY());
+		std::cout << ' ';
 	}
-	for (int i = 0; i < 5; i++)
-	{
-		if (nextLocation == ptr[i]->getItemSymbol()) //if the player collides with an item.
-		{
-			inv.push_back(*ptr[i]); //adds item to the inventory
+	Utils::gotoXY(x, y); //goes to where message should be printed.
+	std::cout << msg << std::endl; //prints new message
+}
 
-									// Remove it from the map
-			gameMap.setXY(p.getNewPositionY(), p.getNewPositionX(), ' ');
+bool Utils::handleInput(Player& p, std::vector<Item>& inv)
+{
+	char input = _getch();
+	p.setNewPositionX(p.getPositionX());
+	p.setNewPositionY(p.getPositionY());
+
+	if (GetKeyState(VK_UP) & 0x8000)
+	{
+		p.setNewPositionY(p.getPositionY() - 1);
+		return false;
+	}
+	if (GetKeyState(VK_DOWN) & 0x8000)
+	{
+		p.setNewPositionY(p.getPositionY() + 1);
+		return false;
+	}
+	if (GetKeyState(VK_RIGHT) & 0x8000)
+	{
+		p.setNewPositionX(p.getPositionX() + 1);
+		return false;
+	}
+	if (GetKeyState(VK_LEFT) & 0x8000)
+	{
+		p.setNewPositionX(p.getPositionX() - 1);
+		return false;
+	}
+	if (input == 'i' || input == 'I') //prints out inventory when I is pressed
+	{
+		Utils::printInventory(inv);
+		return true;
+	}
+}
+
+bool Utils::invInput(Player& p, Map& gameMap, std::vector<Item>& inv)
+{
+	char input = _getch();
+	while (true) {
+
+		Utils::printMsg(0, 18,"Press 'G' to go back to game or 'D' to delete an item");
+		std::cin >> input;
+		if (input == 'g' || input == 'G') //if player presses g, exits the inventory and goes back to game
+		{
+			Utils::clearScene(); //removes inventory scene
+			gameMap.printMap(); //prints map
+			return true;	//disables inventory controls
+		}
+		if (input == 'd' || input == 'D' && inv.size() >= 0) //if player presses d to drop item.
+		{
+			int itemToDrop;
+			Utils::printMsg(0, 18, "select the number you want to drop:");
+			std::cin >> itemToDrop;
+			if (itemToDrop >= 0 && itemToDrop <= inv.size())
+			{
+				//prints item symbol back onto map
+				if (p.dropItem(inv[itemToDrop].getItemSymbol(), gameMap, p) == true)
+				{
+					//removes item from inventory
+					inv.erase(inv.begin() + itemToDrop);
+					Utils::printInventory(inv);
+				}
+				else{
+					Utils::printInventory(inv);
+				}
+			}else {}
 		}
 	}
 }

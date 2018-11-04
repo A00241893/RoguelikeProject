@@ -1,12 +1,12 @@
-#ifndef CHARACTER_H
-#define CHARACTER_H
+#ifndef GAMEENTITY_H
+#define GAMEENTITY_H
 #include "Position.h"
 
-class Character : public Position
+class GameEntity : public Position
 {
 public:
-	Character();
-	Character(int x, int y, int newX, int newY, char s, int h);
+	GameEntity();
+	GameEntity(int x, int y, int newX, int newY, char s, int h);
 	void setHealth(int h);
 	int getHealth() const;
 	void setSymbol(char s);
@@ -21,4 +21,4 @@ private:
 	char symbol;
 };
 
-#endif // CHARACTER_H
+#endif // GAMEENTITY_H
