@@ -7,7 +7,7 @@
 #include "Weapon.h"
 #include "Armour.h"
 #include "Potion.h"
-#include "Utils.h"
+#include "GameEngine.h"
 #include "Map.h"
 
 const int LEVELWIDTH = 20;
@@ -20,6 +20,8 @@ int main()
 	HWND console = GetConsoleWindow();
 	RECT r;
 	GetWindowRect(console, &r);
+
+	GameEngine gameEng;
 
 	char map[LEVELHEIGHT][LEVELWIDTH + 1] =
 	{ "aaaaaaaaaaaaaaaaaaaa",
@@ -39,7 +41,7 @@ int main()
 	gameMap->printMap();
 
 	Item *itemPtr[5];
-	itemPtr[0] = new Potion('h', "Health");
+	itemPtr[0] = new Potion('h', "Health", 20);
 	itemPtr[1] = new Weapon('s', "Sword", 5);
 	itemPtr[2] = new Weapon('m', "Mace", 10);
 	itemPtr[3] = new Armour('l', "Leather", 5);
@@ -55,20 +57,20 @@ int main()
 			p->renderPlayer(*p);
 
 			// Render the GUI
-			Utils::renderGUI(*p);
+			gameEng.renderGUI(*p);
 
 			// Handles the input
-			if (Utils::handleInput(*p, inventory) == true)
+			if (gameEng.handleInput(*p, inventory) == true)
 			{
 				invActive = true; // activates inventory
 			}
 
 			// Handle collisions
-			p->handleCollisions(*p, itemPtr, *gameMap, inventory);
+			gameEng.handleCollisions(*p, itemPtr, *gameMap, inventory);
 		}
 		if (invActive == true)
 		{
-			if (Utils::invInput(*p, *gameMap, inventory) == true) //inventory controls
+			if (gameEng.invInput(*p, *gameMap, inventory) == true) //inventory controls
 			{
 				invActive = false; // activates game controls
 			}

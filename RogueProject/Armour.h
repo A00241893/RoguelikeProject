@@ -10,6 +10,8 @@ public:
 	void setArmour(int a);
 	int getArmour() const;
 
+	void useItem(Player& p);
+
 private:
 	int armour;
 };
