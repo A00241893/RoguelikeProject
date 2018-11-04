@@ -66,7 +66,7 @@ int main()
 			}
 
 			// Handle collisions
-			gameEng.handleCollisions(*p, itemPtr, *gameMap, inventory);
+			p->handleCollisions(*p, itemPtr, *gameMap, inventory);
 		}
 		if (invActive == true)
 		{

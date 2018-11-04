@@ -14,11 +14,11 @@ int Potion::getHealth() const
 	return health;
 }
 
-void Potion::useItem(Player& p)
-{
-	p.setHealth(p.getHealth() + health);
-	if (p.getHealth() > 100)
-	{
-		p.setHealth(100);
-	}
-}
+//void Potion::useItem(Player& p)
+//{
+//	p.setHealth(p.getHealth() + health);
+//	if (p.getHealth() > 100)
+//	{
+//		p.setHealth(100);
+//	}
+//}

@@ -2,7 +2,7 @@
 #define ITEM_H
 
 #include <string>
-#include "Player.h"
+//#include "Player.h"
 
 class Item
 {

@@ -11,7 +11,7 @@ public:
 	void setHealth(int h);
 	int getHealth() const;
 
-	void useItem(Player& p);
+	//void useItem(Player& p);
 
 private:
 	int health;
