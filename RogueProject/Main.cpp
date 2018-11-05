@@ -4,9 +4,6 @@
 #include <vector>
 #include <conio.h>
 #include "Position.h"
-#include "Weapon.h"
-#include "Armour.h"
-#include "Potion.h"
 #include "GameEngine.h"
 #include "Map.h"
 
@@ -36,7 +33,7 @@ int main()
 		"aaaaaaaaaaaaaaaaaaaa"
 	};
 
-	Map* gameMap = new Map(&map[0][0], LEVELWIDTH+1, LEVELHEIGHT);
+	Map* gameMap = new Map();
 	gameMap->initMap(&map[0][0], LEVELWIDTH+1, LEVELHEIGHT);
 	gameMap->printMap();
 
@@ -49,15 +46,15 @@ int main()
 
 	Player* p = new Player(5,5,5,5, 'P', 50, 0, 0);
 
+	// Render the GUI
+	gameEng.renderGUI(*p);
+
 	while (true)
 	{
 		if (invActive == false)
 		{
 			// Render the scene
 			p->renderPlayer(*p);
-
-			// Render the GUI
-			gameEng.renderGUI(*p);
 
 			// Handles the input
 			if (gameEng.handleInput(*p, inventory) == true)
@@ -66,13 +63,14 @@ int main()
 			}
 
 			// Handle collisions
-			p->handleCollisions(*p, itemPtr, *gameMap, inventory);
+			gameEng.handleCollisions(*p, itemPtr, *gameMap, inventory);
 		}
 		if (invActive == true)
 		{
 			if (gameEng.invInput(*p, *gameMap, inventory) == true) //inventory controls
 			{
 				invActive = false; // activates game controls
+				gameEng.renderGUI(*p);
 			}
 		}
 	}

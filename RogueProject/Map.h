@@ -7,7 +7,6 @@ class Map
 {
 public:
 	Map();
-	Map(char *map, int w, int h);
 	int getWidth();
 	void setWidth(int w);
 	int getHeight();

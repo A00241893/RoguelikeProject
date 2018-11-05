@@ -1,14 +1,10 @@
 #include "Map.h"
 
-Map::Map(char *map, int w, int h)
-{
-	map = NULL;
-	w = 0;
-	h = 0;
-}
 Map::Map()
 {
-	delete[] map;
+	mapWidth = NULL;
+	mapHeight = NULL;
+	map = NULL;
 }
 
 void Map::setWidth(int w)
