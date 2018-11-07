@@ -4,15 +4,18 @@
 #include <iostream>
 #include "Map.h"
 #include "GameEntity.h"
+#include "Position.h"
 #include "Utils.h"
 
-class Player : public GameEntity
+class Player : public GameEntity, public Position
 {
 public:
 	Player();
-	Player(int x, int y, int newX, int newY, char sym, int health, int arm, int dam);
+	Player(int x, int y, int newX, int newY, char symbol, int health, int armour, int dam);
 
-	void setDamage(int h);
+	void setHealth(int h);
+	int getHealth() const;
+	void setDamage(int d);
 	int getDamage() const;
 	void setArmour(int a);
 	int getArmour() const;
@@ -21,6 +24,7 @@ public:
 	void renderPlayer(Player & p);
 
 private:
+	int health;
 	int armour;
 	int damage;
 

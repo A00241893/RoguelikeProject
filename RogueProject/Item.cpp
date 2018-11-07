@@ -3,23 +3,14 @@
 Item::Item()
 {
 	name = " ";
-	itemSymbol = ' ';
 }
 
-Item::Item(char s, std::string n)
+Item::Item(char symbol, std::string n)
+	:GameEntity(symbol)
 {
 	name = n;
-	itemSymbol = s;
 }
 
-void Item::setItemSymbol(char s)
-{
-	itemSymbol = s;
-}
-char Item::getItemSymbol()
-{
-	return itemSymbol;
-}
 void Item::setItemName(std::string n)
 {
 	name = n;

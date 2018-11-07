@@ -3,13 +3,22 @@
 
 Player::Player(){}
 
-Player::Player(int x, int y, int newX, int newY, char s, int h, int arm, int dam)
-	:GameEntity(x, y, newX, newY, s, h)
+Player::Player(int x, int y, int newX, int newY, char symbol, int h, int arm, int dam)
+	:GameEntity(symbol) ,Position(x, y, newX, newY)
 {
+	health = h;
 	armour = arm;
 	damage = dam;
 }
 
+void Player::setHealth(int h)
+{
+	health = h;
+}
+int Player::getHealth() const
+{
+	return health;
+}
 void Player::setDamage(int d)
 {
 	damage = d;

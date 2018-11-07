@@ -4,20 +4,18 @@
 #include <string>
 #include "Player.h"
 
-class Item
+class Item : public GameEntity
 {
 public:
 	Item();
-	Item(char itemSymbol, std::string name);
-	void setItemSymbol(char s);
-	char getItemSymbol();
+	Item(char symbol, std::string name);
+
 	void setItemName(std::string n);
 	std::string getItemName() const;
 
 	//virtual void useItem(Player& p) = 0;
 
 private:
-	char itemSymbol;
 	std::string name;
 };
 

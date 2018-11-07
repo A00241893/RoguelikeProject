@@ -12,11 +12,23 @@
 class GameEngine
 {
 public:
-	void renderGUI(Player& p);
-	void renderInventory(std::vector<Item>& inv);
-	bool handleInput(Player & p, std::vector<Item>& inv);
-	bool invInput(Player& p, Map& gameMap, std::vector<Item>& inv);
-	void handleCollisions(Player& p, Item* ptr[5], Map& gameMap, std::vector<Item>& inv);
+	GameEngine();
+	void init();
+	void run();
+	void renderGUI();
+	void renderInventory();
+	void handleCollisions();
+	bool handleInput();
+	bool invInput();
+
+private:
+	Map* gameMap;
+	Player* p;
+	Item *itemPtr[5];
+	static const int LEVELWIDTH = 20;
+	static const int LEVELHEIGHT = 10;
+	bool invActive = false;
+	std::vector<Item> inventory;
 };
 
 #endif // GAMEENGINE_H
