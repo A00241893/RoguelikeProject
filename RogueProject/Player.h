@@ -20,7 +20,7 @@ public:
 	void setArmour(int a);
 	int getArmour() const;
 
-	bool dropItem(char drop, Map gameMap, Player & p);
+	bool dropItem(char drop, Map& gameMap, Player & p);
 	void renderPlayer(Player & p);
 
 private:

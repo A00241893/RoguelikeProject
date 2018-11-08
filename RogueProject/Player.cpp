@@ -36,7 +36,7 @@ int Player::getArmour() const
 	return armour;
 }
 
-bool Player::dropItem(char drop, Map gameMap, Player& p)
+bool Player::dropItem(char drop, Map& gameMap, Player& p)
 {
 	/**checks if the spaces around the player is empty.
 	if it is empty it prints the item's symbol to be dropped in that space
