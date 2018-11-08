@@ -7,25 +7,31 @@ void GameEngine::init()
 	char map[LEVELHEIGHT][LEVELWIDTH + 1] =
 	{ "aaaaaaaaaaaaaaaaaaaa",
 		"a                  a",
-		"a              h   a",
-		"a      s           a",
-		"a           i      a",
 		"a                  a",
 		"a                  a",
-		"a              m   a",
-		"a   l              a",
+		"a                  a",
+		"a                  a",
+		"a                  a",
+		"a                  a",
+		"a                  a",
 		"aaaaaaaaaaaaaaaaaaaa"
 	};
 
-	gameMap = new Map();
-	gameMap->initMap(&map[0][0], LEVELWIDTH+1, LEVELHEIGHT);
-	gameMap->printMap();
+	itemPtr[0] = new Potion(2, 16, 0, 0, 'h', "Health", 20);
+	itemPtr[1] = new Weapon(3, 8, 0, 0, 's', "Sword", 5);
+	itemPtr[2] = new Weapon(7, 16, 0, 0, 'm', "Mace", 10);
+	itemPtr[3] = new Armour(8, 5, 0, 0, 'l', "Leather", 5);
+	itemPtr[4] = new Armour(6, 13, 0, 0, 'i', "Iron", 10);
 
-	itemPtr[0] = new Potion('h', "Health", 20);
-	itemPtr[1] = new Weapon('s', "Sword", 5);
-	itemPtr[2] = new Weapon('m', "Mace", 10);
-	itemPtr[3] = new Armour('l', "Leather", 5);
-	itemPtr[4] = new Armour('i', "Iron", 10);
+	gameMap = new Map();
+	gameMap->initMap(&map[0][0], LEVELWIDTH + 1, LEVELHEIGHT);
+
+	for (int i = 0; i < 5; i++) //adds items to map
+	{
+		gameMap->setXY(itemPtr[i]->getPositionX(), itemPtr[i]->getPositionY(), itemPtr[i]->getSymbol());
+	}
+
+	gameMap->printMap();
 
 	p = new Player(5,5,5,5, 'P', 50, 0, 0);
 
@@ -159,7 +165,7 @@ bool GameEngine::invInput()
 			int itemToDrop;
 			Utils::printMsg(0, 18, "select the number you want to drop:");
 			std::cin >> itemToDrop;
-			if (itemToDrop >= 0 && itemToDrop <= inventory.size())
+			if (itemToDrop >= 0 && itemToDrop <= inventory.size()) //if valid no if entered and something is in the inventory
 			{
 				//prints item symbol back onto map
 				if (p->dropItem(inventory[itemToDrop].getSymbol(), *gameMap, *p) == true)
@@ -170,6 +176,7 @@ bool GameEngine::invInput()
 				}
 				else {
 					GameEngine::renderInventory();
+					Utils::printMsg(0, 17, "no space to drop item!!");
 				}
 			}
 			else {

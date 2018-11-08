@@ -4,7 +4,7 @@
 Player::Player(){}
 
 Player::Player(int x, int y, int newX, int newY, char symbol, int h, int arm, int dam)
-	:GameEntity(symbol) ,Position(x, y, newX, newY)
+	:GameEntity(x, y, newX, newY, symbol)
 {
 	health = h;
 	armour = arm;

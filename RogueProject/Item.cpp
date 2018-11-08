@@ -5,8 +5,8 @@ Item::Item()
 	name = " ";
 }
 
-Item::Item(char symbol, std::string n)
-	:GameEntity(symbol)
+Item::Item(int x, int y, int newX, int newY, char symbol, std::string n)
+	:GameEntity(x, y, newX, newY, symbol)
 {
 	name = n;
 }
@@ -19,3 +19,5 @@ std::string Item::getItemName() const
 {
 	return name;
 }
+
+//void Item::useItem(Player& p) {}

@@ -8,7 +8,7 @@ class Item : public GameEntity
 {
 public:
 	Item();
-	Item(char symbol, std::string name);
+	Item(int x, int y, int newX, int newY, char symbol, std::string name);
 
 	void setItemName(std::string n);
 	std::string getItemName() const;

@@ -2,7 +2,8 @@
 
 GameEntity::GameEntity() {}
 
-GameEntity::GameEntity(char s)
+GameEntity::GameEntity(int x, int y, int newX, int newY, char s)
+	:Position(x, y, newX, newY)
 {
 	symbol = s;
 }

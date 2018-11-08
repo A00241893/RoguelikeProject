@@ -4,10 +4,10 @@
 #include <iostream>
 #include "Map.h"
 #include "GameEntity.h"
-#include "Position.h"
+
 #include "Utils.h"
 
-class Player : public GameEntity, public Position
+class Player : public GameEntity
 {
 public:
 	Player();
