@@ -2,8 +2,8 @@
 
 Potion::Potion(){}
 
-Potion::Potion(int x, int y, int newX, int newY, char s, std::string n, int health)
-	: Item(x, y, newX, newY, s, n){}
+Potion::Potion(int x, int y, char s, std::string n, int health)
+	: Item(x, y, s, n){}
 
 void Potion::setHealth(int h)
 {

@@ -17,11 +17,11 @@ void GameEngine::init()
 		"aaaaaaaaaaaaaaaaaaaa"
 	};
 
-	itemPtr[0] = new Potion(2, 16, 0, 0, 'h', "Health", 20);
-	itemPtr[1] = new Weapon(3, 8, 0, 0, 's', "Sword", 5);
-	itemPtr[2] = new Weapon(7, 16, 0, 0, 'm', "Mace", 10);
-	itemPtr[3] = new Armour(8, 5, 0, 0, 'l', "Leather", 5);
-	itemPtr[4] = new Armour(6, 13, 0, 0, 'i', "Iron", 10);
+	itemPtr[0] = new Potion(2, 16, 'h', "Health", 20);
+	itemPtr[1] = new Weapon(3, 8, 's', "Sword", 5);
+	itemPtr[2] = new Weapon(7, 16, 'm', "Mace", 10);
+	itemPtr[3] = new Armour(8, 5, 'l', "Leather", 5);
+	itemPtr[4] = new Armour(6, 13, 'i', "Iron", 10);
 
 	gameMap = new Map();
 	gameMap->initMap(&map[0][0], LEVELWIDTH + 1, LEVELHEIGHT);

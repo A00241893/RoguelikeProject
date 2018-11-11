@@ -7,7 +7,7 @@ class GameEntity : public Position
 {
 public:
 	GameEntity();
-	GameEntity(int x, int y, int newX, int newY, char s);
+	GameEntity(int x, int y, char s);
 	void setSymbol(char s);
 	char getSymbol() const;
 

@@ -4,7 +4,7 @@
 Enemy::Enemy() {}
 
 Enemy::Enemy(int x, int y, int newX, int newY, char symbol, int h,  int dam, std::string name)
-	:GameEntity(x, y, newX, newY, symbol)
+	:Actor(x, y, newX, newY, symbol)
 {
 	health = h;
 	damage = dam;

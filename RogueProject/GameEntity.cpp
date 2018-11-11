@@ -2,8 +2,8 @@
 
 GameEntity::GameEntity() {}
 
-GameEntity::GameEntity(int x, int y, int newX, int newY, char s)
-	:Position(x, y, newX, newY)
+GameEntity::GameEntity(int x, int y, char s)
+	:Position(x, y)
 {
 	symbol = s;
 }

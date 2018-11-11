@@ -6,7 +6,7 @@ class Armour : public Item
 {
 public:
 	Armour();
-	Armour(int x, int y, int newX, int newY, char symbol, std::string name, int armour);
+	Armour(int x, int y, char symbol, std::string name, int armour);
 	void setArmour(int a);
 	int getArmour() const;
 

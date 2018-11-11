@@ -3,11 +3,10 @@
 #include <vector>
 #include <iostream>
 #include "Map.h"
-#include "GameEntity.h"
-
+#include "Actor.h"
 #include "Utils.h"
 
-class Player : public GameEntity
+class Player : public Actor
 {
 public:
 	Player();
