@@ -11,7 +11,7 @@ public:
 	void setDamage(int d);
 	int getDamage() const;
 
-	//void useItem(Player& p);
+	void useItem(Player& p) const;
 
 private:
 	int damage;

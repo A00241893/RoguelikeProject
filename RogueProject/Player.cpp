@@ -41,22 +41,22 @@ bool Player::dropItem(char drop, Map& gameMap, Player& p)
 	/**checks if the spaces around the player is empty.
 	if it is empty it prints the item's symbol to be dropped in that space
 	**/
-	if (gameMap.getXY(p.getNewPositionY(), p.getNewPositionX() - 1) == ' ')
+	if (gameMap.getXY(p.getNewPositionY(), p.getNewPositionX() - 1) == '.')
 	{
 		gameMap.setXY(p.getNewPositionY(), p.getNewPositionX() - 1, drop);
 		return true;
 	}
-	else if (gameMap.getXY(p.getNewPositionY(), p.getNewPositionX() + 1) == ' ')
+	else if (gameMap.getXY(p.getNewPositionY(), p.getNewPositionX() + 1) == '.')
 	{
 		gameMap.setXY(p.getNewPositionY(), p.getNewPositionX() + 1, drop);
 		return true;
 	}
-	else if (gameMap.getXY(p.getNewPositionY() + 1, p.getNewPositionX()) == ' ')
+	else if (gameMap.getXY(p.getNewPositionY() + 1, p.getNewPositionX()) == '.')
 	{
 		gameMap.setXY(p.getNewPositionY() + 1, p.getNewPositionX(), drop);
 		return true;
 	}
-	else if (gameMap.getXY(p.getNewPositionY() - 1, p.getNewPositionX()) == ' ')
+	else if (gameMap.getXY(p.getNewPositionY() - 1, p.getNewPositionX()) == '.')
 	{
 		gameMap.setXY(p.getNewPositionY() - 1, p.getNewPositionX(), drop);
 		return true;
@@ -71,7 +71,7 @@ void Player::renderPlayer(Player& p)
 {
 	// Blank old player position
 	Utils::gotoXY(p.getPositionX(), p.getPositionY());
-	std::cout << ' ';
+	std::cout << '.';
 
 	// Draw new player position
 	Utils::gotoXY(p.getNewPositionX(), p.getNewPositionY());

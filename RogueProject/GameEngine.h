@@ -20,6 +20,8 @@ public:
 	void handleCollisions();
 	bool handleInput();
 	bool invInput();
+	void dropItem();
+	void useItem();
 
 private:
 	Map* gameMap;

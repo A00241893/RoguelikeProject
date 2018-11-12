@@ -1,24 +1,27 @@
 #include "Potion.h"
 
-Potion::Potion(){}
+Potion::Potion(){
+	pHealth = 0;
+}
 
-Potion::Potion(int x, int y, char s, std::string n, int health)
+Potion::Potion(int x, int y, char s, std::string n, int h)
 	: Item(x, y, s, n){}
 
-void Potion::setHealth(int h)
+void Potion::setPotion(int h)
 {
-	health = h;
+	pHealth = h;
 }
-int Potion::getHealth() const
+int Potion::getPotion() const
 {
-	return health;
+	return pHealth;
 }
 
-//void Potion::useItem(Player& p)
-//{
-//	p.setHealth(p.getHealth() + health);
-//	if (p.getHealth() > 100)
-//	{
-//		p.setHealth(100);
-//	}
-//}
+void Potion::useItem(Player& p) const
+{
+	p.setHealth(p.getHealth() + pHealth);
+	if (p.getHealth() > 100)
+	{
+		p.setHealth(100);
+	}
+	else {}
+}

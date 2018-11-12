@@ -20,7 +20,7 @@ int Armour::getArmour() const
 	return armour;
 }
 
-//void Armour::useItem(Player& p)
-//{
-//	p.setDamage(armour);
-//}
+void Armour::useItem(Player& p) const
+{
+	p.setArmour(armour);
+}

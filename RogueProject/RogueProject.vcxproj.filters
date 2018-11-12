@@ -87,4 +87,9 @@
       <UniqueIdentifier>{714b6279-5abe-4324-b750-5ebb86d91590}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="Map.txt">
+      <Filter>Source Files</Filter>
+    </Text>
+  </ItemGroup>
 </Project>

@@ -13,7 +13,7 @@ public:
 	void setItemName(std::string n);
 	std::string getItemName() const;
 
-	//virtual void useItem(Player& p) = 0;
+	virtual void useItem(Player& p) const;
 
 private:
 	std::string name;

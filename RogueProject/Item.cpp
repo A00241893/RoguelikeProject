@@ -20,4 +20,4 @@ std::string Item::getItemName() const
 	return name;
 }
 
-//void Item::useItem(Player& p) {}
+void Item::useItem(Player& p) const{}

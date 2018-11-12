@@ -7,14 +7,14 @@ class Potion : public Item
 {
 public:
 	Potion();
-	Potion(int x, int y, char symbol, std::string name, int health);
-	void setHealth(int h);
-	int getHealth() const;
+	Potion(int x, int y, char symbol, std::string name, int h);
+	void setPotion(int h);
+	int getPotion() const;
 
-	//void useItem(Player& p);
+	void useItem(Player& p) const;
 
 private:
-	int health;
+	int pHealth;
 };
 
 #endif // POTION_H

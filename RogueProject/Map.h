@@ -13,7 +13,7 @@ public:
 	void setHeight(int h);
 	char getXY(int i, int j);
 	void setXY(int i, int j, char value);
-	void initMap(char *m, int width, int height);
+	void loadMap(std::string path);
 	void printMap();
 
 

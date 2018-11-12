@@ -1,4 +1,5 @@
 #include "Map.h"
+#include <fstream>
 
 Map::Map()
 {
@@ -37,13 +38,31 @@ char Map::getXY(int i, int j)
 	return map[i*mapWidth + j];
 }
 
-void Map::initMap(char *m, int width, int height)
+void Map::loadMap(std::string path)
 {
-	mapWidth = width;
-	mapHeight = height;
-	map = new char[height * width];
+	if (map != NULL)
+	{
+		delete[] map;
+	}
 
-	memcpy(map, m, width*height);
+	std::string line;
+	std::ifstream myfile(path);
+	if (myfile.is_open())
+	{
+		myfile >> mapWidth;
+		myfile >> mapHeight;
+
+		map = new char[mapWidth * mapHeight];
+
+		for (int i = 0; i < mapWidth; i++)
+		{
+			for (int j = 0; j < mapHeight; j++)
+			{
+				myfile >> map[i*mapHeight + j];
+			}
+		}
+		myfile.close();
+	}
 }
 
 void Map::printMap()
