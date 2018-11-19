@@ -4,20 +4,14 @@ GameEngine::GameEngine(){}
 
 void GameEngine::init()
 {
-	itemPtr[0] = new Potion(2, 16, 'h', "Health", 20);
-	itemPtr[1] = new Weapon(3, 8, 's', "Sword", 5);
-	itemPtr[2] = new Weapon(7, 16, 'm', "Mace", 10);
-	itemPtr[3] = new Armour(8, 5, 'l', "Leather", 5);
-	itemPtr[4] = new Armour(6, 13, 'i', "Iron", 10);
+	itemPtr[0] = new Potion('H', "Health", 20);
+	itemPtr[1] = new Weapon('S', "Sword", 5);
+	itemPtr[2] = new Weapon('M', "Mace", 10);
+	itemPtr[3] = new Armour('L', "Leather", 5);
+	itemPtr[4] = new Armour('I', "Iron", 10);
 
 	gameMap = new Map();
 	gameMap->loadMap("Map.txt");
-
-	for (int i = 0; i < 5; i++) //adds items to map
-	{
-		gameMap->setXY(itemPtr[i]->getPositionX(), itemPtr[i]->getPositionY(), itemPtr[i]->getSymbol());
-	}
-
 	gameMap->printMap();
 
 	p = new Player(5,5,5,5, 'P', 50, 0, 0);
@@ -64,18 +58,6 @@ void GameEngine::renderGUI()
 	Utils::printMsg(0, 18, "Press I to go to the Inventory");
 }
 
-void GameEngine::renderInventory()
-{
-	Utils::clearScene();
-	std::cout << "Inventory:" << std::endl;
-	std::cout << "--------------------" << std::endl;
-	for (int i = 0; i < inventory.size(); i++)		//prints out the vector of inventory items
-	{
-		std::cout << i << ": " << inventory[i].getItemName() << std::endl;
-	}
-	std::cout << "--------------------" << std::endl;
-}
-
 void GameEngine::handleCollisions()
 {
 	// Check the location that the player wants to move to on the map
@@ -92,9 +74,9 @@ void GameEngine::handleCollisions()
 	{
 		if (nextLocation == itemPtr[i]->getSymbol()) //if the player collides with an item.
 		{
-			inventory.push_back(*itemPtr[i]); //adds item to the inventory
+			p->addToInventory(itemPtr[i]->getItemName()); //adds item to the inventory
 
-											  // Remove it from the map
+			// Remove it from the map
 			gameMap->setXY(p->getNewPositionY(), p->getNewPositionX(), '.');
 		}
 	}
@@ -128,32 +110,8 @@ bool GameEngine::handleInput()
 	}
 	if (input == 'i' || input == 'I') //prints out inventory when I is pressed
 	{
-		GameEngine::renderInventory();
+		p->renderInventory();
 		return true;
-	}
-}
-
-void GameEngine::dropItem()
-{
-	int itemToDrop;
-	Utils::printMsg(0, 18, "select the number you want to drop:");
-	std::cin >> itemToDrop;
-	if (itemToDrop >= 0 && itemToDrop <= inventory.size()) //if valid no if entered and something is in the inventory
-	{
-		//prints item symbol back onto map
-		if (p->dropItem(inventory[itemToDrop].getSymbol(), *gameMap, *p) == true)
-		{
-			//removes item from inventory
-			inventory.erase(inventory.begin() + itemToDrop);
-			GameEngine::renderInventory();
-		}
-		else {
-			GameEngine::renderInventory();
-			Utils::printMsg(0, 17, "no space to drop item!!");
-		}
-	}
-	else {
-		Utils::printMsg(0, 17, "enter valid input!!");
 	}
 }
 
@@ -162,11 +120,11 @@ void GameEngine::useItem()
 	int itemToUse;
 	Utils::printMsg(0, 18, "select the number you want to use:");
 	std::cin >> itemToUse;
-	if (itemToUse >= 0 && itemToUse <= inventory.size()) //if valid no if entered and something is in the inventory
+	if (itemToUse >= 0 && itemToUse <= p->inventory.size()) //if valid number is entered and something is in the inventory
 	{
 		for (int i = 0; i < 5; i++)
 		{
-			if (inventory[itemToUse].getSymbol() == itemPtr[i]->getSymbol())
+			if (p->inventory[itemToUse] == itemPtr[i]->getItemName()) //finds what item it is
 			{
 				itemPtr[i]->useItem(*p);
 			}
@@ -174,8 +132,8 @@ void GameEngine::useItem()
 		}
 		
 		//removes item from inventory
-		inventory.erase(inventory.begin() + itemToUse);
-		GameEngine::renderInventory();
+		p->inventory.erase(p->inventory.begin() + itemToUse);
+		p->renderInventory();
 	}
 	else {
 		Utils::printMsg(0, 17, "enter valid input!!");
@@ -187,7 +145,7 @@ bool GameEngine::invInput()
 	char input = _getch();
 	while (true) {
 
-		Utils::printMsg(0, 18, "Press 'G' to go back to game , 'D' to delete an item , 'U' to use an item");
+		Utils::printMsg(0, 18, "Press 'G' to go back to game , 'D' to drop an item , 'U' to use an item");
 		std::cin >> input;
 		if (input == 'g' || input == 'G') //if player presses g, exits the inventory and goes back to game
 		{
@@ -196,11 +154,11 @@ bool GameEngine::invInput()
 			GameEngine::renderGUI(); // prints GUI
 			return true;	//disables inventory controls
 		}
-		if (input == 'd' || input == 'D' && inventory.size() >= 0) //if player presses d to drop item.
+		if (input == 'd' || input == 'D' && p->inventory.size() >= 0) //if player presses d to drop item.
 		{
-			GameEngine::dropItem();
+			p->removeFromInventory(*gameMap, *p);
 		}
-		if (input == 'u' || input == 'U' && inventory.size() >= 0) //if player presses u to use item.
+		if (input == 'u' || input == 'U' && p->inventory.size() >= 0) //if player presses u to use item.
 		{
 			GameEngine::useItem();
 		}

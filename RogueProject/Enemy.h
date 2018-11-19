@@ -3,10 +3,10 @@
 #include <iostream>
 #include <string>
 #include "Map.h"
-#include "Actor.h"
+#include "GameEntity.h"
 #include "Utils.h"
 
-class Enemy : public Actor
+class Enemy : public GameEntity
 {
 public:
 	Enemy();
@@ -16,6 +16,8 @@ public:
 	int getHealth() const;
 	void setDamage(int d);
 	int getDamage() const;
+
+	void renderEnemy(Enemy& e);
 
 private:
 	int health;

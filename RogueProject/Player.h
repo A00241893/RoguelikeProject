@@ -3,10 +3,10 @@
 #include <vector>
 #include <iostream>
 #include "Map.h"
-#include "Actor.h"
+#include "GameEntity.h"
 #include "Utils.h"
 
-class Player : public Actor
+class Player : public GameEntity
 {
 public:
 	Player();
@@ -21,11 +21,16 @@ public:
 
 	bool dropItem(char drop, Map& gameMap, Player & p);
 	void renderPlayer(Player & p);
+	void renderInventory();
+	void addToInventory(std::string n);
+	void removeFromInventory(Map& gameMap, Player& p);
 
+	std::vector<std::string> inventory;
 private:
 	int health;
 	int armour;
 	int damage;
+	
 
 };
 

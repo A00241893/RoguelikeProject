@@ -5,8 +5,8 @@ Weapon::Weapon()
 	damage = 0;
 }
 
-Weapon::Weapon(int x, int y, char s, std::string n, int d)
-	: Item(x, y, s,n)
+Weapon::Weapon(char s, std::string n, int d)
+	: Item(s,n)
 {
 	damage = d;
 }

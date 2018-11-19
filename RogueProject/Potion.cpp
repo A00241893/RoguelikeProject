@@ -4,8 +4,8 @@ Potion::Potion(){
 	pHealth = 0;
 }
 
-Potion::Potion(int x, int y, char s, std::string n, int h)
-	: Item(x, y, s, n){}
+Potion::Potion(char s, std::string n, int h)
+	: Item(s, n){}
 
 void Potion::setPotion(int h)
 {
@@ -18,7 +18,7 @@ int Potion::getPotion() const
 
 void Potion::useItem(Player& p) const
 {
-	p.setHealth(p.getHealth() + pHealth);
+	p.setHealth(p.getHealth() + 20);
 	if (p.getHealth() > 100)
 	{
 		p.setHealth(100);

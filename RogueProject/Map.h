@@ -7,6 +7,7 @@ class Map
 {
 public:
 	Map();
+	~Map();
 	int getWidth();
 	void setWidth(int w);
 	int getHeight();

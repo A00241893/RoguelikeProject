@@ -8,6 +8,14 @@ Map::Map()
 	map = NULL;
 }
 
+Map::~Map() //deconstructor
+{
+	if (map != NULL)
+	{
+		delete[] map;
+	}
+}
+
 void Map::setWidth(int w)
 {
 	mapWidth = w;

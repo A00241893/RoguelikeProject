@@ -4,7 +4,7 @@
 Enemy::Enemy() {}
 
 Enemy::Enemy(int x, int y, int newX, int newY, char symbol, int h,  int dam, std::string name)
-	:Actor(x, y, newX, newY, symbol)
+	:GameEntity(x, y, newX, newY, symbol)
 {
 	health = h;
 	damage = dam;
@@ -25,5 +25,21 @@ void Enemy::setDamage(int d)
 int Enemy::getDamage() const
 {
 	return damage;
+}
+
+void Enemy::renderEnemy(Enemy& e)
+{
+	// Blank old player position
+	Utils::gotoXY(e.getPositionX(), e.getPositionY());
+	std::cout << '.';
+
+	// Draw new player position
+	Utils::gotoXY(e.getNewPositionX(), e.getNewPositionY());
+	std::cout << e.getSymbol();
+
+	e.setPositionX(e.getNewPositionX());
+	e.setPositionY(e.getNewPositionY());
+
+	Sleep(60);
 }
 

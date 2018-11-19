@@ -7,7 +7,7 @@ class Potion : public Item
 {
 public:
 	Potion();
-	Potion(int x, int y, char symbol, std::string name, int h);
+	Potion(char symbol, std::string name, int h);
 	void setPotion(int h);
 	int getPotion() const;
 

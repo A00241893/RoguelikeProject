@@ -4,7 +4,7 @@
 Player::Player(){}
 
 Player::Player(int x, int y, int newX, int newY, char symbol, int h, int arm, int dam)
-	:Actor(x, y, newX, newY, symbol)
+	:GameEntity(x, y, newX, newY, symbol)
 {
 	health = h;
 	armour = arm;
@@ -81,5 +81,46 @@ void Player::renderPlayer(Player& p)
 	p.setPositionY(p.getNewPositionY());
 
 	Sleep(60);
+}
+
+void Player::renderInventory()
+{
+	Utils::clearScene();
+	std::cout << "Inventory:" << std::endl;
+	std::cout << "--------------------" << std::endl;
+	for (int i = 0; i < inventory.size(); i++)		//prints out the vector of inventory items
+	{
+		std::cout << i << ": " << inventory[i] << std::endl;
+	}
+	std::cout << "--------------------" << std::endl;
+}
+
+void Player::addToInventory(std::string n)
+{
+	inventory.push_back(n); //adds item to the inventory
+}
+
+void Player::removeFromInventory(Map& gameMap, Player& p)
+{
+	int itemToDrop;
+	Utils::printMsg(0, 18, "select the number you want to drop:");
+	std::cin >> itemToDrop;
+	if (itemToDrop >= 0 && itemToDrop <= inventory.size()) //if valid number is entered and something is in the inventory
+	{
+		//prints item symbol back onto map
+		if (p.dropItem(inventory[itemToDrop].at(0), gameMap, p) == true)
+		{
+			//removes item from inventory
+			inventory.erase(inventory.begin() + itemToDrop);
+			p.renderInventory();
+		}
+		else {
+			p.renderInventory();
+			Utils::printMsg(0, 17, "no space to drop item!!");
+		}
+	}
+	else {
+		Utils::printMsg(0, 17, "enter valid input!!");
+	}
 }
 

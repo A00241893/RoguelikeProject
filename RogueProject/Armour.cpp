@@ -5,8 +5,8 @@ Armour::Armour()
 	armour = 0;
 }
 
-Armour::Armour(int x, int y, char s, std::string n, int a)
-	: Item(x, y, s, n)
+Armour::Armour(char s, std::string n, int a)
+	: Item(s, n)
 {
 	armour = a;
 }

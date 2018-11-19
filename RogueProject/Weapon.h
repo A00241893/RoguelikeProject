@@ -7,7 +7,7 @@ class Weapon : public Item
 {
 public:
 	Weapon();
-	Weapon(int x, int y, char s, std::string n, int d);
+	Weapon(char s, std::string n, int d);
 	void setDamage(int d);
 	int getDamage() const;
 
