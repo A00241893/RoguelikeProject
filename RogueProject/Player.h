@@ -24,6 +24,7 @@ public:
 	void renderInventory();
 	void addToInventory(std::string n);
 	void removeFromInventory(Map& gameMap, Player& p);
+	void handleCollisions(Player& p, Map& gameMap);
 
 	std::vector<std::string> inventory;
 private:

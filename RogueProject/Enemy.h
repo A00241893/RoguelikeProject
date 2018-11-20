@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include "Map.h"
+#include "Player.h"
 #include "GameEntity.h"
 #include "Utils.h"
 
@@ -18,6 +19,10 @@ public:
 	int getDamage() const;
 
 	void renderEnemy(Enemy& e);
+	void enemyCollisions(Enemy& e, Map& gameMap, double distance);
+	void enemyState(Player& p, Map& gameMap, Enemy& e);
+	void evade(Player& p, Enemy& e);
+	void chase(Player& p, Enemy& e);
 
 private:
 	int health;

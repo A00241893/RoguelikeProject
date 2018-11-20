@@ -124,3 +124,51 @@ void Player::removeFromInventory(Map& gameMap, Player& p)
 	}
 }
 
+void Player::handleCollisions(Player& p, Map& gameMap)
+{
+	// Check the location that the player wants to move to on the map
+	char nextLocation = gameMap.getXY(p.getNewPositionY(), p.getNewPositionX());
+
+	// If the nextLocation is a border....
+	if (nextLocation == 'a')
+	{
+		// ....then don't move i.e. set the new position back to the old position
+		p.setNewPositionX(p.getPositionX());
+		p.setNewPositionY(p.getPositionY());
+	}
+	if (nextLocation == 'H')
+	{
+		p.addToInventory("Health"); //adds potion to the inventory
+		gameMap.setXY(p.getNewPositionY(), p.getNewPositionX(), '.'); // Remove it from the map
+	}
+	if (nextLocation == 'S')
+	{
+		p.addToInventory("Sword"); //adds sword to the inventory
+		gameMap.setXY(p.getNewPositionY(), p.getNewPositionX(), '.'); // Remove it from the map
+	}
+	if (nextLocation == 'M')
+	{
+		p.addToInventory("Mace"); //adds mace to the inventory
+		gameMap.setXY(p.getNewPositionY(), p.getNewPositionX(), '.'); // Remove it from the map
+	}
+	if (nextLocation == 'I')
+	{
+		p.addToInventory("Iron"); //adds iron armour to the inventory
+		gameMap.setXY(p.getNewPositionY(), p.getNewPositionX(), '.'); // Remove it from the map
+	}
+	if (nextLocation == 'L')
+	{
+		p.addToInventory("Leather"); //adds leather armour to the inventory
+		gameMap.setXY(p.getNewPositionY(), p.getNewPositionX(), '.'); // Remove it from the map
+	}
+	//for (int i = 0; i < 5; i++)
+	//{
+	//	if (nextLocation == itemPtr[i]->getSymbol()) //if the player collides with an item.
+	//	{
+	//		p->addToInventory(itemPtr[i]->getItemName()); //adds item to the inventory
+
+	//		// Remove it from the map
+	//		gameMap->setXY(p->getNewPositionY(), p->getNewPositionX(), '.');
+	//	}
+	//}
+}

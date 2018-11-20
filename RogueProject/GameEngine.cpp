@@ -15,6 +15,7 @@ void GameEngine::init()
 	gameMap->printMap();
 
 	p = new Player(5,5,5,5, 'P', 50, 0, 0);
+	e = new Enemy(14,7,0,0, 'E',60,10,"Goblin");
 
 	GameEngine::renderGUI(); //prints GUI
 }
@@ -26,17 +27,18 @@ void GameEngine::run()
 		if (invActive == false) //inventory screen inactive
 		{
 			p->renderPlayer(*p); // Render the scene
+			e->enemyState(*p,*gameMap,*e);
 
 			if (GameEngine::handleInput() == true) // Handles the input
 			{
 				invActive = true; // activates inventory
 			}
 			
-			GameEngine::handleCollisions(); // Handle collisions
+			p->handleCollisions(*p, *gameMap); // Handle collisions
 		}
 		if (invActive == true)
 		{
-			if (GameEngine::invInput() == true) //inventory controls
+			if (GameEngine::inventoryInput() == true) //inventory controls
 			{
 				invActive = false; // activates game controls
 			}
@@ -56,30 +58,6 @@ void GameEngine::renderGUI()
 	std::cout << "Damage: " << p->getDamage();
 
 	Utils::printMsg(0, 18, "Press I to go to the Inventory");
-}
-
-void GameEngine::handleCollisions()
-{
-	// Check the location that the player wants to move to on the map
-	char nextLocation = gameMap->getXY(p->getNewPositionY(), p->getNewPositionX());
-
-	// If the nextLocation is a border....
-	if (nextLocation == 'a')
-	{
-		// ....then don't move i.e. set the new position back to the old position
-		p->setNewPositionX(p->getPositionX());
-		p->setNewPositionY(p->getPositionY());
-	}
-	for (int i = 0; i < 5; i++)
-	{
-		if (nextLocation == itemPtr[i]->getSymbol()) //if the player collides with an item.
-		{
-			p->addToInventory(itemPtr[i]->getItemName()); //adds item to the inventory
-
-			// Remove it from the map
-			gameMap->setXY(p->getNewPositionY(), p->getNewPositionX(), '.');
-		}
-	}
 }
 
 bool GameEngine::handleInput()
@@ -115,7 +93,7 @@ bool GameEngine::handleInput()
 	}
 }
 
-void GameEngine::useItem()
+void GameEngine::useItemFromInventory()
 {
 	int itemToUse;
 	Utils::printMsg(0, 18, "select the number you want to use:");
@@ -140,7 +118,7 @@ void GameEngine::useItem()
 	}
 }
 
-bool GameEngine::invInput()
+bool GameEngine::inventoryInput()
 {
 	char input = _getch();
 	while (true) {
@@ -160,7 +138,7 @@ bool GameEngine::invInput()
 		}
 		if (input == 'u' || input == 'U' && p->inventory.size() >= 0) //if player presses u to use item.
 		{
-			GameEngine::useItem();
+			GameEngine::useItemFromInventory();
 		}
 	}
 }
