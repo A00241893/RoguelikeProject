@@ -16,6 +16,7 @@ void GameEngine::init()
 
 	p = new Player(5,5,5,5, 'P', 50, 0, 0);
 	e = new Enemy(14,7,14,7, 'E',60,3,"Goblin");
+	e1 = new Enemy(10, 11, 10, 11, 'E', 60, 3, "Goblin");
 
 	GameEngine::renderGUI(); //prints GUI
 }
@@ -23,15 +24,20 @@ void GameEngine::init()
 void GameEngine::run()
 {
 	e->renderActor(*e);
+	e1->renderActor(*e1);
 
 	while (lose != true)
 	{
 		if (invActive == false) //inventory screen inactive
 		{
 			p->renderActor(*p); // Render the scene
-			if(e->enemyState(*p,*gameMap,*e) == true)
+			if(e->enemyState(*p,*gameMap,*e) == true) // enemy 1
 			{
 				battleSystem(*p, *e);
+			}
+			if (e1->enemyState(*p, *gameMap, *e1) == true) // enemy 2
+			{
+				battleSystem(*p, *e1);
 			}
 
 			if (GameEngine::handleInput() == true) // Handles the input
@@ -46,6 +52,8 @@ void GameEngine::run()
 			{
 				invActive = false; // activates game controls
 			}
+			e->renderActor(*e); // renders enemy after return from inventory
+			e1->renderActor(*e1);
 		}
 	}
 	Utils::clearScene();
@@ -57,11 +65,11 @@ void GameEngine::renderGUI()
 {
 	/** prints the GUI under the map
 	**/
-	Utils::gotoXY(2, 12);
-	std::cout << "Health: " << p->getHealth();
-	Utils::gotoXY(2, 13);
-	std::cout << "Armour: " << p->getArmour();
 	Utils::gotoXY(2, 14);
+	std::cout << "Health: " << p->getHealth();
+	Utils::gotoXY(2, 15);
+	std::cout << "Armour: " << p->getArmour();
+	Utils::gotoXY(2, 16);
 	std::cout << "Damage: " << p->getDamage();
 
 	Utils::printMsg(0, 18, "Press I to go to the Inventory");
@@ -77,12 +85,13 @@ void GameEngine::battleSystem(Player& p, Enemy& e)
 		delete &e;	//when enemy health is 0 deletes enemy
 	}
 
-	if (enemyAlive != false)
+	if (enemyAlive != false) //while enemy is alive
 	{
-		if (p.getArmour() > 0) //damages player armour first.
+		if (p.getArmour() > 0) //enemy damages player armour first.
 		{
 			p.setArmour(p.getArmour() - e.getDamage());
-			if (p.getArmour() < 0){
+			if (p.getArmour() < 0) //sets armour to 0 if it goes below 0
+			{
 				p.setArmour(0);
 			}
 		}else

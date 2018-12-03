@@ -26,6 +26,7 @@ private:
 	Map* gameMap;
 	Player* p;
 	Enemy* e;
+	Enemy* e1;
 	Item *itemPtr[5];
 	bool invActive = false;
 	bool lose = false;
