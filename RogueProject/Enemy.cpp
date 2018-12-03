@@ -4,30 +4,10 @@
 Enemy::Enemy() {}
 
 Enemy::Enemy(int x, int y, int newX, int newY, char symbol, int h,  int dam, std::string name)
-	:GameEntity(x, y, newX, newY, symbol)
-{
-	health = h;
-	damage = dam;
-}
+	:Actor(x, y, newX, newY, symbol, h, dam){}
 
-void Enemy::setHealth(int h)
-{
-	health = h;
-}
-int Enemy::getHealth() const
-{
-	return health;
-}
-void Enemy::setDamage(int d)
-{
-	damage = d;
-}
-int Enemy::getDamage() const
-{
-	return damage;
-}
 
-void Enemy::renderEnemy(Enemy& e)
+void Enemy::renderActor(Enemy& e)
 {
 	// Blank old player position
 	Utils::gotoXY(e.getPositionX(), e.getPositionY());
@@ -51,9 +31,15 @@ void Enemy::enemyCollisions(Enemy& e, Map& gameMap, double distance)
 	// If the nextLocation is empty....
 	if (distance > 1 && nextLocation == '.')
 	{
-		e.renderEnemy(e);
+		e.renderActor(e);
 	}
-	else
+	else if (nextLocation == 'a')
+	{
+		// ....then don't move i.e. set the new position back to the old position
+		e.setNewPositionX(e.getPositionX());
+		e.setNewPositionY(e.getPositionY());
+	}
+	else if (nextLocation == 'P')
 	{
 		// ....then don't move i.e. set the new position back to the old position
 		e.setNewPositionX(e.getPositionX());
@@ -61,7 +47,7 @@ void Enemy::enemyCollisions(Enemy& e, Map& gameMap, double distance)
 	}
 }
 
-void Enemy::enemyState(Player& p, Map& gameMap, Enemy& e)
+bool Enemy::enemyState(Player& p, Map& gameMap, Enemy& e)
 {
 	e.setNewPositionX(e.getPositionX());
 	e.setNewPositionY(e.getPositionY());
@@ -73,6 +59,10 @@ void Enemy::enemyState(Player& p, Map& gameMap, Enemy& e)
 
 	double distance = sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2) * 1);
 
+	if (distance <= 1)
+	{
+		return true; //when player and enemy attack each other
+	}
 	if (distance < 4 && p.getHealth() < e.getHealth())
 	{
 		chase(p, e);
@@ -86,7 +76,7 @@ void Enemy::enemyState(Player& p, Map& gameMap, Enemy& e)
 	else if (p.getHealth() == e.getHealth()){}
 }
 
-void Enemy::chase(Player& p, Enemy& e)
+void Enemy::chase(Player& p, Enemy& e) //enemy moves towards the player
 {
 	if (e.getPositionX() > p.getNewPositionX())
 	{
@@ -107,7 +97,7 @@ void Enemy::chase(Player& p, Enemy& e)
 	}
 }
 
-void Enemy::evade(Player& p, Enemy& e)
+void Enemy::evade(Player& p, Enemy& e) //enemy moves away from the player
 {
 	if (e.getPositionX() < p.getNewPositionX())
 	{

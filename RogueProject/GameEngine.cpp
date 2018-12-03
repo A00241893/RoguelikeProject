@@ -7,36 +7,40 @@ void GameEngine::init()
 	itemPtr[0] = new Potion('H', "Health", 20);
 	itemPtr[1] = new Weapon('S', "Sword", 5);
 	itemPtr[2] = new Weapon('M', "Mace", 10);
-	itemPtr[3] = new Armour('L', "Leather", 5);
-	itemPtr[4] = new Armour('I', "Iron", 10);
+	itemPtr[3] = new Armour('L', "Leather", 15);
+	itemPtr[4] = new Armour('I', "Iron", 30);
 
 	gameMap = new Map();
 	gameMap->loadMap("Map.txt");
 	gameMap->printMap();
 
 	p = new Player(5,5,5,5, 'P', 50, 0, 0);
-	e = new Enemy(14,7,0,0, 'E',60,10,"Goblin");
+	e = new Enemy(14,7,14,7, 'E',60,3,"Goblin");
 
 	GameEngine::renderGUI(); //prints GUI
 }
 
 void GameEngine::run()
 {
-	while (true)
+	e->renderActor(*e);
+
+	while (lose != true)
 	{
 		if (invActive == false) //inventory screen inactive
 		{
-			p->renderPlayer(*p); // Render the scene
-			e->enemyState(*p,*gameMap,*e);
+			p->renderActor(*p); // Render the scene
+			if(e->enemyState(*p,*gameMap,*e) == true)
+			{
+				battleSystem(*p, *e);
+			}
 
 			if (GameEngine::handleInput() == true) // Handles the input
 			{
 				invActive = true; // activates inventory
 			}
-			
-			p->handleCollisions(*p, *gameMap); // Handle collisions
+			p->handleCollisions(*gameMap, *p); // Handle collisions
 		}
-		if (invActive == true)
+		else if (invActive == true)
 		{
 			if (GameEngine::inventoryInput() == true) //inventory controls
 			{
@@ -44,6 +48,9 @@ void GameEngine::run()
 			}
 		}
 	}
+	Utils::clearScene();
+	Utils::printMsg(0, 5, "You Died");
+	system("pause");
 }
 
 void GameEngine::renderGUI()
@@ -58,6 +65,36 @@ void GameEngine::renderGUI()
 	std::cout << "Damage: " << p->getDamage();
 
 	Utils::printMsg(0, 18, "Press I to go to the Inventory");
+}
+
+void GameEngine::battleSystem(Player& p, Enemy& e)
+{
+	bool enemyAlive = true;
+	e.setHealth(e.getHealth() - p.getDamage()); //damages enemy health
+	if (e.getHealth() <= 0)
+	{
+		enemyAlive = false;
+		delete &e;	//when enemy health is 0 deletes enemy
+	}
+
+	if (enemyAlive != false)
+	{
+		if (p.getArmour() > 0) //damages player armour first.
+		{
+			p.setArmour(p.getArmour() - e.getDamage());
+			if (p.getArmour() < 0){
+				p.setArmour(0);
+			}
+		}else
+		{
+			p.setHealth(p.getHealth() - e.getDamage());
+			if (p.getHealth() <= 0)
+			{
+				lose = true; //stops game when player dies.
+			}
+		}
+	}
+	GameEngine::renderGUI();
 }
 
 bool GameEngine::handleInput()

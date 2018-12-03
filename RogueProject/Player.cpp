@@ -1,32 +1,16 @@
 #include "Player.h"
 
-
-Player::Player(){}
+Player::Player()
+{
+	armour = 0;
+}
 
 Player::Player(int x, int y, int newX, int newY, char symbol, int h, int arm, int dam)
-	:GameEntity(x, y, newX, newY, symbol)
+	:Actor(x, y, newX, newY, symbol, h, dam)
 {
-	health = h;
 	armour = arm;
-	damage = dam;
 }
 
-void Player::setHealth(int h)
-{
-	health = h;
-}
-int Player::getHealth() const
-{
-	return health;
-}
-void Player::setDamage(int d)
-{
-	damage = d;
-}
-int Player::getDamage() const
-{
-	return damage;
-}
 void Player::setArmour(int a)
 {
 	armour = a;
@@ -34,6 +18,22 @@ void Player::setArmour(int a)
 int Player::getArmour() const
 {
 	return armour;
+}
+
+void Player::renderActor(Player& p)
+{
+	// Blank old player position
+	Utils::gotoXY(p.getPositionX(), p.getPositionY());
+	std::cout << '.';
+
+	// Draw new player position
+	Utils::gotoXY(p.getNewPositionX(), p.getNewPositionY());
+	std::cout << p.getSymbol();
+
+	p.setPositionX(p.getNewPositionX());
+	p.setPositionY(p.getNewPositionY());
+
+	Sleep(60);
 }
 
 bool Player::dropItem(char drop, Map& gameMap, Player& p)
@@ -65,22 +65,6 @@ bool Player::dropItem(char drop, Map& gameMap, Player& p)
 	{
 		return false;
 	}
-}
-
-void Player::renderPlayer(Player& p)
-{
-	// Blank old player position
-	Utils::gotoXY(p.getPositionX(), p.getPositionY());
-	std::cout << '.';
-
-	// Draw new player position
-	Utils::gotoXY(p.getNewPositionX(), p.getNewPositionY());
-	std::cout << p.getSymbol();
-
-	p.setPositionX(p.getNewPositionX());
-	p.setPositionY(p.getNewPositionY());
-
-	Sleep(60);
 }
 
 void Player::renderInventory()
@@ -124,7 +108,7 @@ void Player::removeFromInventory(Map& gameMap, Player& p)
 	}
 }
 
-void Player::handleCollisions(Player& p, Map& gameMap)
+void Player::handleCollisions(Map& gameMap, Player& p)
 {
 	// Check the location that the player wants to move to on the map
 	char nextLocation = gameMap.getXY(p.getNewPositionY(), p.getNewPositionX());

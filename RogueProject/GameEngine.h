@@ -20,6 +20,7 @@ public:
 	bool handleInput();
 	bool inventoryInput();
 	void useItemFromInventory();
+	void battleSystem(Player& p, Enemy& e);
 
 private:
 	Map* gameMap;
@@ -27,6 +28,7 @@ private:
 	Enemy* e;
 	Item *itemPtr[5];
 	bool invActive = false;
+	bool lose = false;
 };
 
 #endif // GAMEENGINE_H
